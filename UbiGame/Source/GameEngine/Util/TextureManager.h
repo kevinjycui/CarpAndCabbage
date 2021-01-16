@@ -16,6 +16,10 @@ namespace GameEngine
 
 			Lettuce,
 
+			FishRight,
+
+			LettuceRight,
+
 			Knife,
 
 			Background,
@@ -34,6 +38,8 @@ namespace GameEngine
 		case eTexture::Knife: return "knife.png";
 		case eTexture::Background: return "bg.png";
 		case eTexture::Bread: return "bread.png";
+		case eTexture::FishRight: return "fish_right.png";
+		case eTexture::LettuceRight: return "lettuce_right.png";
 		}
 		return "UnknownTexType";
 	}

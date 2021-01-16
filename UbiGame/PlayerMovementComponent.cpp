@@ -6,6 +6,7 @@
 #include "../Socket.h"
 #include <iostream>
 #include <string>
+#include <GameEngine/EntitySystem/Components/SpriteRenderComponent.h>
 
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
 #include "GameEngine/Util/CollisionManager.h"
@@ -35,7 +36,7 @@ void PlayerMovementComponent::Update()
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        displacement.x += inputAmount * dt;
+        displacement.x += inputAmount * dt; 
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -71,6 +72,12 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ 1920 / 2 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
+                if (position.x <= GetEntity()->GetSize().y / 2) {
+                    sf::Vector2f fix{ GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
+                    GetEntity()->SetPos(fix);
+                }
+                sf::Vector2f gravity{ 0.0f, 1.0f };
+                GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
                 return;
         }
     }
@@ -83,6 +90,12 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ 1920 / 2 + GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
+                if (position.x > 1920 - GetEntity()->GetSize().y / 2) {
+                    sf::Vector2f fix{ 1920 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
+                    GetEntity()->SetPos(fix);
+                }
+                sf::Vector2f gravity{ 0.0f, 1.0f };
+                GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
                 return;
         }
     }
@@ -125,10 +138,12 @@ void PlayerMovementComponent::Update()
     GetEntity()->SetPos(newPos);
 
     // Only send update to server when user has moved
-    nlohmann::json j;
-    j["x"] = GetEntity()->GetPos().x;
-    j["y"] = GetEntity()->GetPos().y;
-    Socket::io.socket()->emit("movePlayer", j.dump());
+    if (GetEntity()->GetPos() != position) {
+        nlohmann::json j;
+        j["x"] = GetEntity()->GetPos().x;
+        j["y"] = GetEntity()->GetPos().y;
+        Socket::io.socket()->emit("movePlayer", j.dump());
+    }
 }
 
 void PlayerMovementComponent::OnAddToWorld() {
