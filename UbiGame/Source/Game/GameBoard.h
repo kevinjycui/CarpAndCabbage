@@ -21,6 +21,7 @@ namespace Game
 	private:
 		void CreatePlayer();          // <-- Added Function
 		GameEngine::Entity* m_player; // <-- Added Member
+		GameEngine::Entity* n_player; // <-- Added Member
 	};
 }
 
