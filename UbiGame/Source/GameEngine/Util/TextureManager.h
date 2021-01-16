@@ -16,6 +16,10 @@ namespace GameEngine
 
 			Lettuce,
 
+			Knife,
+
+			Background,
+
 			Count,
 		};
 	}	
@@ -23,8 +27,10 @@ namespace GameEngine
 	inline const char* GetPath(eTexture::type texture)
 	{
 		switch (texture) {
-		case eTexture::Fish: return "fish_sprite.png";
-		case eTexture::Lettuce: return "lettuce_sprite.png";
+		case eTexture::Fish: return "fish.png";
+		case eTexture::Lettuce: return "lettuce.png";
+		case eTexture::Knife: return "knife.png";
+		case eTexture::Background: return "bg.png";
 		}
 		return "UnknownTexType";
 	}

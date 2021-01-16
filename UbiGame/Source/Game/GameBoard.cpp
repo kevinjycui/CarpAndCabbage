@@ -2,6 +2,7 @@
 
 #include "GameEngine/GameEngineMain.h"
 #include "../../PlayerMovementComponent.h"
+#include "../../KnifeMovementComponent.h"
 #include "GameEngine/EntitySystem/Components/SpriteRenderComponent.h"
 #include <GameEngine/EntitySystem/Components/SoundComponent.h>
 
@@ -11,19 +12,55 @@ static GameEngine::SoundComponent* soundCompon;
 static int soundId;
 
 GameBoard::GameBoard() {
+	AddBackground();
 	CreatePlayer();
+	AddObstacles();
+}
+
+void GameBoard::AddBackground()
+{
+	bg = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
+
+	bg->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+	bg->SetSize(sf::Vector2f(1920.0f, 1080.0f));
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(bg->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Background);
+
+	soundCompon = static_cast<GameEngine::SoundComponent*>
+		(bg->AddComponent<GameEngine::SoundComponent>());
+
+	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
+	soundCompon->PlaySound(soundId, true);
+}
+
+void GameBoard::AddObstacles()
+{
+	GameEngine::Entity* knife = new GameEngine::Entity();
+
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(knife);
+
+	knife->SetPos(sf::Vector2f(640.0f, 550.0f));
+	knife->SetSize(sf::Vector2f(175.0f, 50.0f));
+
+	knife->AddComponent<Game::KnifeMovementComponent>();
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(knife->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Knife);
+
+	obstacles.push_back(knife);
 }
 
 void GameBoard::CreatePlayer()
 {
 	m_player = new GameEngine::Entity();
 	n_player = new GameEngine::Entity();
-
-	soundCompon = static_cast<GameEngine::SoundComponent*>
-		(m_player->AddComponent<GameEngine::SoundComponent>());
-
-	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
-	soundCompon->PlaySound(soundId, true);
 
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(m_player);
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(n_player);

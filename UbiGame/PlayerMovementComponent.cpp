@@ -49,22 +49,22 @@ void PlayerMovementComponent::Update()
             return;
         break;
     case false:
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
         {
             displacement.x -= inputAmount * dt;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
         {
             displacement.x += inputAmount * dt;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
         {
             displacement.y -= inputAmount * dt;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
         {
             displacement.y += inputAmount * dt;
         }
