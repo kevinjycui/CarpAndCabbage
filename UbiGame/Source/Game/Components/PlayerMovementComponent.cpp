@@ -8,6 +8,8 @@ using namespace Game;
 void PlayerMovementComponent::Update()
 {
     __super::Update();
+    float playerVelocity = 100.f;
+    sf::Vector2f wantedVelocity{ 0.0f,0.0f };
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
@@ -25,12 +27,12 @@ void PlayerMovementComponent::Update()
     case true:
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            displacement.x -= inputAmount * dt;
+            wantedVelocity.x -= playerVelocity;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         {
-            displacement.x += inputAmount * dt;
+            wantedVelocity.x -= playerVelocity;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))

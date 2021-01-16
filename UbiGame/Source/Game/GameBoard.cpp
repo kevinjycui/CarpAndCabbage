@@ -121,7 +121,7 @@ void GameBoard::CreatePlayer() {
 
 	player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	player->AddComponent<GameEngine::CollidablePhysicsComponent>();
-	// player->AddComponent<PawnPhysicsComponent>();
+	//player->AddComponent<PawnPhysicsComponent>();
 
 	this->player = player;
 }
