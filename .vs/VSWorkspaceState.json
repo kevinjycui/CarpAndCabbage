@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\SFML-2.5.0",
+    "\\SFML-2.5.0\\examples",
+    "\\SFML-2.5.0\\examples\\sockets",
+    "\\UbiGame",
+    "\\UbiGame\\Resources",
+    "\\UbiGame\\Source\\Game",
+    "\\UbiGame\\Source\\GameEngine",
+    "\\UbiGame\\Source\\GameEngine\\EntitySystem"
+  ],
+  "SelectedNode": "\\SFML-2.5.0\\examples\\pong",
+  "PreviewInSolutionExplorer": false
+}
