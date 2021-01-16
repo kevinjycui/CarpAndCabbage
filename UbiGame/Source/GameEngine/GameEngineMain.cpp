@@ -51,11 +51,19 @@ GameEngineMain::~GameEngineMain()
 void GameEngineMain::OnInitialised()
 {
 	//Engine is initialised, this spot should be used for game object and clocks initialisation
-	m_gameBoard = new Game::GameBoard();
+	//m_gameBoard = new Game::GameBoard();
+	m_menu = new Game::Menu();
 	sm_deltaTimeClock.restart();
 	sm_gameClock.restart();
 }
 
+//function to create a gameboard
+void GameEngineMain::StartGame()
+{
+	m_gameBoard = new Game::GameBoard();
+	sm_deltaTimeClock.restart();
+	sm_gameClock.restart();
+}
 
 void GameEngineMain::CreateAndSetUpWindow()
 {
@@ -113,6 +121,8 @@ void GameEngineMain::Update()
 	RemovePendingEntities();
 
 	UpdateWindowEvents();
+	if (m_menu)
+		m_menu->Update();
 	if (m_gameBoard)
 		m_gameBoard->Update();
 

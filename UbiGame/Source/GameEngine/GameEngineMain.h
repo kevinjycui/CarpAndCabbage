@@ -29,6 +29,7 @@ namespace GameEngine
 		void RemoveEntity(Entity* entity);
 
 		void OnInitialised();
+		void StartGame();
 		bool IsGameOver() const { return m_gameBoard && m_gameBoard->IsGameOver(); }
 		sio::client h;
 
@@ -57,6 +58,7 @@ namespace GameEngine
 		sf::RenderTarget*   m_renderTarget;
 		sf::RenderWindow*   m_renderWindow; //In future they will be different						
 
+		Game::Menu*			m_menu;
 		Game::GameBoard*    m_gameBoard;
 		float				m_lastDT;
 

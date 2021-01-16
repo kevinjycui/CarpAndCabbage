@@ -10,6 +10,21 @@ namespace Game
 	//Used for storing and controlling all game related entities, as well as providing an entry point for the "game" side of application	
 	class PlayerEntity;	
 
+	class Menu
+	{
+	public:
+		Menu();
+		virtual ~Menu();
+		void Update();
+
+	private:
+		void AddMenuBackground();
+		GameEngine::Entity* bg;
+		void AddButton();
+		GameEngine::Entity* btn;
+		void AddTextbox();
+	};
+
 	class GameBoard
 	{
 	public:
