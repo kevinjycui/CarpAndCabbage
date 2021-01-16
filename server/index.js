@@ -3,9 +3,41 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
 io.on('connection', (socket) => {
-	console.log('a user connected', socket);
+	console.log(`connection by socket ${socket.id}`);
+
+	socket.on('joinRoom', (roomId) => {
+		console.log(`${socket.id} has joined ${roomId}`);
+		socket.join(roomId);
+
+		// If only one person in the room
+		if (io.sockets.adapter.rooms[roomId].length <= 1) {
+			// Tell client that they are the first in room, client will display
+			// something like a waiting screen
+			io.to(socket.id).emit('firstInRoom');
+		}
+		// If the room is full (already has 2 players in it)
+		else if (io.sockets.adapter.rooms[roomId].length === 2) {
+			io.to(socket.id).emit('fullRoom');
+		}
+		// Otherwise, have the player join the room and emit the event
+		else {
+			socket.broadcast.to(roomId).emit('newPlayer', socket.id);
+		}
+	});
+
+	// This is sent by clients to update something/send an event to the other
+	// player's game
+	socket.on('update', (payload) => {
+		console.log(`${socket.id} sends out update: ${payload}`)
+		socket.broadcast.to(payload.roomId).emit(payload);
+	});
+
+	// Cleaning up when a socket disconencts
+	socket.on('disconnect', () => {
+		socket.removeAllListeners();
+	})
 })
 
 http.listen(3000, () => {
-	console.log('Listening on *:3000')
+	console.log('Listening on localhost:3000')
 })
