@@ -53,6 +53,7 @@ void GameBoard::AddObstacles()
 	knife->SetSize(sf::Vector2f(175.0f, 50.0f));
 
 	knife->AddComponent<Game::KnifeMovementComponent>();
+	knife->AddComponent<GameEngine::CollidableComponent>();
 
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(knife->AddComponent<GameEngine::SpriteRenderComponent>());
 
