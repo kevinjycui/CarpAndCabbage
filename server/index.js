@@ -7,6 +7,8 @@ io.on('connection', (socket) => {
 
 	// The socket's room ID
 	let socketRoomId;
+	let playerId = socket.id;
+	let opponentId;
 
 	socket.on('joinRoom', (roomId, ack) => {
 		console.log(`${socket.id} has joined ${roomId}`);
@@ -40,6 +42,15 @@ io.on('connection', (socket) => {
 			playerId: socket.id
 		}));
 	});
+
+	socket.on('chiliAttack', (payloadJSON) => {
+		console.log(`${socket.id} sends out chili attack: ${payloadJSON}`)
+		const payload = JSON.parse(payloadJSON);
+		io.to(socketRoomId).emit('chiliAttack', JSON.stringify({
+			x: payload.x,
+			activatedById: socket.id
+		}))
+	})
 
 	// Cleaning up when a socket disconencts
 	socket.on('disconnect', () => {
