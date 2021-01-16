@@ -45,7 +45,8 @@ namespace Game
 		void AddObstacles();
 		void CreatePlatform();
 		std::vector<GameEngine::Entity*> obstacles;
-		std::vector<GameEngine::Entity*> platforms;
+		std::vector<GameEngine::Entity*> fishPlatforms;
+		std::vector<GameEngine::Entity*> cabbagePlatforms;
 		void CreateCuts();
 		GameEngine::Entity* cut;
 	};
