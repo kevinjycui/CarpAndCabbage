@@ -4,6 +4,7 @@
 #include "GameEngine/GameEngineMain.h" //<-- Add this include to retrieve the delta time between frames
 #include "json.hpp"
 #include "../Socket.h"
+#include <iostream>
 
 using namespace Game;
 
@@ -86,7 +87,7 @@ void PlayerMovementComponent::Update()
         nlohmann::json j;
         j["x"] = GetEntity()->GetPos().x;
         j["y"] = GetEntity()->GetPos().y;
-        Socket::io.socket()->emit("update", j.dump());
+        Socket::io.socket()->emit("movePlayer", j.dump());
     }
 }
 
@@ -94,6 +95,11 @@ void PlayerMovementComponent::OnAddToWorld() {
     __super::OnAddToWorld();
 }
 
-PlayerMovementComponent::PlayerMovementComponent(){}
+PlayerMovementComponent::PlayerMovementComponent(){
+    Socket::io.socket()->on("movePlayer", [&](sio::event& ev) {
+        std::cout << "hello";
+        std::cout << ev.get_message();
+    });
+}
 
 PlayerMovementComponent::~PlayerMovementComponent() {}

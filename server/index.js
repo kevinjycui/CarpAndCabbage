@@ -29,11 +29,13 @@ io.on('connection', (socket) => {
 		}
 	});
 
-	// This is sent by clients to update something/send an event to the other
-	// player's game
-	socket.on('update', (payload) => {
-		console.log(`${socket.id} sends out update: ${payload}`)
-		socket.broadcast.to(socketRoomId).emit(payload);
+	socket.on('movePlayer', (payload) => {
+		console.log(`${socket.id} sends out update move player: ${payload}`)
+		socket.broadcast.to(socketRoomId).emit('movePlayer', {
+			x: payload.x,
+			y: payload.y,
+			player: socket.id
+		});
 	});
 
 	// Cleaning up when a socket disconencts
