@@ -1,0 +1,11 @@
+#Mac OS files
+*/.DS_Store
+
+#Temporary files
+*.o
+*/output
+UbiGame/bin
+UbiGame/tmp
+
+#Visual Studio Meta data
+UbiGame/.vs
