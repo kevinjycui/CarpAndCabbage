@@ -2,6 +2,7 @@
 
 #include "GameEngine/GameEngineMain.h"
 #include "../../PlayerMovementComponent.h"
+#include "GameEngine\EntitySystem\Components\SpriteRenderComponent.h"
 
 using namespace Game;
 
@@ -27,9 +28,10 @@ void GameBoard::CreatePlayer()
 	//Render
 	GameEngine::RenderComponent* render1 = m_player->AddComponent<GameEngine::RenderComponent>();
 	GameEngine::RenderComponent* render2 = n_player->AddComponent<GameEngine::RenderComponent>();
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(m_player->AddComponent<GameEngine::SpriteRenderComponent>());
 
-	render1->SetFillColor(sf::Color::Red);
-	render2->SetFillColor(sf::Color::Blue);
+	spriteRender->SetFillColor(sf::Color::Red);
+	spriteRender->SetTexture(GameEngine::eTexture::Player);
 
 	//Movement
 	m_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
