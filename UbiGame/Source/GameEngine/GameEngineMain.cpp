@@ -58,8 +58,9 @@ void GameEngineMain::OnInitialised()
 }
 
 //function to create a gameboard
-void GameEngineMain::StartGame()
+void GameEngineMain::StartGame(bool isFish)
 {
+	Socket::isFish = isFish;
 	m_gameBoard = new Game::GameBoard();
 	sm_deltaTimeClock.restart();
 	sm_gameClock.restart();

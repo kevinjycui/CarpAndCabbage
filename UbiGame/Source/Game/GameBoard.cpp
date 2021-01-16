@@ -73,9 +73,14 @@ void Menu::AddTextbox() {
 void Menu::Update() {
 	//on click, call the function from gameenginemain
 	//if button clicked
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
 		Menu::~Menu();
-		GameEngine::GameEngineMain::GetInstance()->StartGame();
+		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+	}
+	// Start as opponent
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		Menu::~Menu();
+		GameEngine::GameEngineMain::GetInstance()->StartGame(false);
 	}
 }
 
