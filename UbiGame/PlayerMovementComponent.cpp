@@ -7,7 +7,7 @@ using namespace Game;
 
 void PlayerMovementComponent::Update()
 {
-    Component::Update();
+    __super::Update();
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
@@ -32,4 +32,10 @@ void PlayerMovementComponent::Update()
     GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
 }
 
-void PlayerMovementComponent::OnAddToWorld() {}
+void PlayerMovementComponent::OnAddToWorld() {
+    __super::OnAddToWorld();
+}
+
+PlayerMovementComponent::PlayerMovementComponent(){}
+
+PlayerMovementComponent::~PlayerMovementComponent() {}
