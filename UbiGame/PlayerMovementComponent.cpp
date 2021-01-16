@@ -15,9 +15,14 @@ using namespace Game;
 using sio::socket;
 using sio::message;
 
+static float velocity_y = 0.f;
+static float acceleration_y = 0.098f;
+
 void PlayerMovementComponent::Update()
 {
     __super::Update();
+
+    velocity_y += acceleration_y;
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
@@ -25,8 +30,6 @@ void PlayerMovementComponent::Update()
     //By default the displacement is 0,0
     sf::Vector2f displacement{ 0.0f,0.0f };
     sf::Vector2f position = GetEntity()->GetPos();
-
-    std::cout << "isJumping: " << isJumping << std::endl;
 
     //The amount of speed that we will apply when input is received
     const float inputAmount = 300.0f;
@@ -37,24 +40,6 @@ void PlayerMovementComponent::Update()
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         displacement.x += inputAmount * dt; 
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        // Jumping for the first time
-        if (!isJumping) {
-            isJumping = true;
-            prevJumpIncrement = -inputAmount * dt * 2;
-            displacement.y += prevJumpIncrement;
-        }
-    }
-
-    // If user is currently in middle of jump
-    if (isJumping) {
-        // If jump is significant enough
-        if (abs(prevJumpIncrement / 2) >= 1) {
-            displacement.y -= prevJumpIncrement / 2;
-            prevJumpIncrement /= 2;
-        }
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
@@ -76,7 +61,7 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
-                sf::Vector2f gravity{ 0.0f, 1.0f };
+                sf::Vector2f gravity{ 0.0f, velocity_y };
                 GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
                 return;
         }
@@ -94,7 +79,7 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ 1920 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
-                sf::Vector2f gravity{ 0.0f, 1.0f };
+                sf::Vector2f gravity{ 0.0f, velocity_y };
                 GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
                 return;
         }
@@ -106,7 +91,7 @@ void PlayerMovementComponent::Update()
     auto size = this->GetEntity()->GetSize();
 
     // Update the entity position locally
-    sf::Vector2f gravity{ 0.0f, 1.0f };
+    sf::Vector2f gravity{ 0.0f, velocity_y };
     displacement += gravity;
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
 
@@ -117,11 +102,9 @@ void PlayerMovementComponent::Update()
             continue;
 
         AABBRect intersection;
-        AABBRect myBox = AABBRect(newPos, size);
-        std::cout << size.x << " " << size.y << '\n';
+        AABBRect myBox = AABBRect(newPos, size);\
 
         AABBRect collideBox = colComponent->GetWorldAABB();
-
 
         if (myBox.intersects(collideBox))
         {
@@ -129,8 +112,11 @@ void PlayerMovementComponent::Update()
             //          B
             // a.k.a. user has landed on a platform
             if (myBox.top <= collideBox.top) {
-                std::cout << "collision\n";
-                isJumping = false;
+                velocity_y = 0.f;
+
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                    velocity_y = -4.f;
+                }
             }
         }
     }
@@ -151,8 +137,6 @@ void PlayerMovementComponent::OnAddToWorld() {
 }
 
 PlayerMovementComponent::PlayerMovementComponent(){
-    isJumping = false;
-    prevJumpIncrement = 0.0f;
 }
 
 PlayerMovementComponent::~PlayerMovementComponent() {}
