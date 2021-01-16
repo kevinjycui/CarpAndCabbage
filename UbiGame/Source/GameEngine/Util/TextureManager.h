@@ -26,6 +26,8 @@ namespace GameEngine
 
 			Bread,
 
+			Title,
+
 			Count,
 		};
 	}	
@@ -40,6 +42,7 @@ namespace GameEngine
 		case eTexture::Bread: return "bread.png";
 		case eTexture::FishRight: return "fish_right.png";
 		case eTexture::LettuceRight: return "lettuce_right.png";
+		case eTexture::Title: return "title.png";
 		}
 		return "UnknownTexType";
 	}

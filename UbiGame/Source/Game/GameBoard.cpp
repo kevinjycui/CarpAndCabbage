@@ -55,10 +55,15 @@ void Menu::AddMenuBackground() {
 void Menu::AddButton() {
 	btn = new GameEngine::Entity();
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(btn);
-	btn->SetPos(sf::Vector2f(1920.0f / 2, 800.0f));
-	btn->SetSize(sf::Vector2f(800.0f, 200.0f));
-	GameEngine::RenderComponent* render = static_cast<GameEngine::RenderComponent*>(btn->AddComponent<GameEngine::RenderComponent>());
-	render->SetFillColor(sf::Color::Red);
+	btn->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+	btn->SetSize(sf::Vector2f(800.0f, 450.0f));
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(btn->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Title);
+
 	soundCompon = static_cast<GameEngine::SoundComponent*>
 		(btn->AddComponent<GameEngine::SoundComponent>());
 
