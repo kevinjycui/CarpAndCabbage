@@ -26,6 +26,63 @@ GameBoard::GameBoard() {
 	CreatePlatform();
 }
 
+Menu::Menu() {
+	AddMenuBackground();
+	AddButton();
+	AddTextbox();
+}
+
+
+//if a button is pressed in the menu, call a function in the game engine main that destroys the menu object and calls the code that we removed
+//destructor to get rid of the menu stuff
+//gameenginemain::getinstance()->custom function
+
+void Menu::AddMenuBackground() {
+	bg = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
+
+	bg->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+	bg->SetSize(sf::Vector2f(1920.0f, 1080.0f));
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(bg->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Background);
+
+	soundCompon = static_cast<GameEngine::SoundComponent*>
+		(bg->AddComponent<GameEngine::SoundComponent>());
+
+	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
+	soundCompon->PlaySound(soundId, true);
+}
+
+void Menu::AddButton() {
+	btn = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(btn);
+	btn->SetPos(sf::Vector2f(1920.0f / 2, 800.0f));
+	btn->SetSize(sf::Vector2f(800.0f, 200.0f));
+	GameEngine::RenderComponent* render = static_cast<GameEngine::RenderComponent*>(btn->AddComponent<GameEngine::RenderComponent>());
+	render->SetFillColor(sf::Color::Red);
+}
+
+void Menu::AddTextbox() {
+
+}
+
+void Menu::Update() {
+	//on click, call the function from gameenginemain
+	//if button clicked
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		Menu::~Menu();
+		GameEngine::GameEngineMain::GetInstance()->StartGame();
+	}
+}
+
+Menu::~Menu() {
+
+}
+
 void GameBoard::AddBackground()
 {
 	bg = new GameEngine::Entity();
