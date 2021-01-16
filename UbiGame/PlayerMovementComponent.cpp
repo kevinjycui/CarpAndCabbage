@@ -24,11 +24,9 @@ void PlayerMovementComponent::Update()
 {
     __super::Update();
 
-<<<<<<< HEAD
     velocity_y += acceleration_y;
-=======
+
     GameEngine::SpriteRenderComponent* playerSprite = GetEntity()->GetComponent<GameEngine::SpriteRenderComponent>();
->>>>>>> 3846608bfe480262a2587b34fe63d1050ccb829e
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
