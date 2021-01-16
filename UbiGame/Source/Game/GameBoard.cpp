@@ -50,12 +50,6 @@ void Menu::AddMenuBackground() {
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::Background);
-
-	soundCompon = static_cast<GameEngine::SoundComponent*>
-		(bg->AddComponent<GameEngine::SoundComponent>());
-
-	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
-	soundCompon->PlaySound(soundId, true);
 }
 
 void Menu::AddButton() {
@@ -65,6 +59,11 @@ void Menu::AddButton() {
 	btn->SetSize(sf::Vector2f(800.0f, 200.0f));
 	GameEngine::RenderComponent* render = static_cast<GameEngine::RenderComponent*>(btn->AddComponent<GameEngine::RenderComponent>());
 	render->SetFillColor(sf::Color::Red);
+	soundCompon = static_cast<GameEngine::SoundComponent*>
+		(btn->AddComponent<GameEngine::SoundComponent>());
+
+	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
+	soundCompon->PlaySound(soundId, true);
 }
 
 void Menu::AddTextbox() {
@@ -236,8 +235,17 @@ GameBoard::~GameBoard()
 {
 }
 
-
+int currPlatform = 0;
 void GameBoard::Update()
 {	
-	
+	//create global variable for how many platforms there are and give each one an index, top = 0
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (currPlatform > 0) {
+			currPlatform--;
+			//move selector to next platform
+		}
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		//move selector to previous platform
+	}
 }
