@@ -13,7 +13,14 @@
 #include "../Socket.h"
 #include <string>
 #include "../../PawnPhysicsComponent.h"
+#include "../ChiliArrowMovementComponent.h"
+#include "../ChiliPepperMovementComponent.h"
+#include "../Socket.h"
+#include "sio_socket.h"
+#include "json.hpp"
 
+using sio::socket;
+using sio::message;
 using namespace Game;
 
 static GameEngine::SoundComponent* soundCompon;
@@ -24,6 +31,38 @@ GameBoard::GameBoard() {
 	CreatePlayer();
 	CreateOpponent();
 	AddObstacles();
+
+	Socket::io.socket()->on("chiliAttack", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		auto payload = nlohmann::json::parse(data->get_string());
+		float x = payload["x"];
+		std::string activatedById = payload["activatedById"];
+
+		// Don't activate the fireball for the player who activated it
+		if (activatedById == Socket::playerId) return;
+
+		// Creating the chili pepper
+		GameEngine::Entity* chiliPepper = new GameEngine::Entity();
+		GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliPepper);
+
+		if (Socket::isFish) {
+			chiliPepper->SetPos(sf::Vector2f(960.0f + x, 0.0f));
+		}
+		else {
+			chiliPepper->SetPos(sf::Vector2f(0.0f, 0.0f));
+		}
+
+		chiliPepper->SetSize(sf::Vector2f(20.0f, 20.0f));
+		chiliPepper->AddComponent<Game::ChiliArrowMovementComponent>();
+		chiliPepper->AddComponent<GameEngine::CollidableComponent>();
+
+		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
+
+		chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
+		chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::Knife);
+
+		obstacles.push_back(chiliPepper);
+	}));
+
 	CreatePlatform();
 }
 
@@ -136,6 +175,26 @@ void GameBoard::AddObstacles()
 
 	}
 
+	// Creating user-moveable chili arrow
+	GameEngine::Entity* chiliArrow = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliArrow);
+
+	if (Socket::isFish) {
+		chiliArrow->SetPos(sf::Vector2f(540.0f, 0.0f));
+	}
+	else {
+		chiliArrow->SetPos(sf::Vector2f(0.0f, 0.0f));
+	}
+
+	chiliArrow->SetSize(sf::Vector2f(20.0f, 20.0f));
+	chiliArrow->AddComponent<Game::ChiliArrowMovementComponent>();
+
+	GameEngine::SpriteRenderComponent* chiliArrowSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliArrow->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	chiliArrowSpriteRender->SetFillColor(sf::Color::Transparent);
+	chiliArrowSpriteRender->SetTexture(GameEngine::eTexture::Knife);
+
+	obstacles.push_back(chiliArrow);
 }
 
 void GameBoard::CreatePlatform(){

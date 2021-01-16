@@ -31,6 +31,8 @@
     <ClCompile Include="PawnPhysicsComponent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="OpponentMovementComponent.cpp" />
+    <ClCompile Include="ChiliArrowMovementComponent.cpp" />
+    <ClCompile Include="ChiliPepperMovementComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameEngine\GameEngineMain.cpp">
@@ -143,5 +145,7 @@
     <ClInclude Include="Source\GameEngine\Util\TextureManager.h" />
     <ClInclude Include="Source\GameEngine\EntitySystem\Components\SpriteRenderComponent.h" />
     <ClInclude Include="OpponentMovementComponent.h" />
+    <ClInclude Include="ChiliArrowMovementComponent.h" />
+    <ClInclude Include="ChiliPepperMovementComponent.h" />
   </ItemGroup>
 </Project>
