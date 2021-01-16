@@ -7,6 +7,8 @@
 class Socket {
 public:
 	static sio::client io;
+	static std::string playerId;
+	static std::string opponentId;
 };
 
 #endif
