@@ -11,7 +11,7 @@
 
 using namespace GameEngine;
 
-float GameEngineMain::WINDOW_HEIGHT = 1600;
+float GameEngineMain::WINDOW_HEIGHT = 1500;
 float GameEngineMain::WINDOW_WIDTH = 2800;
 //Nullptr init for singleton class
 GameEngineMain* GameEngineMain::sm_instance = nullptr;
