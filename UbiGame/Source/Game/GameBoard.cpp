@@ -59,6 +59,10 @@ void Menu::AddButton() {
 	btn->SetSize(sf::Vector2f(800.0f, 200.0f));
 	GameEngine::RenderComponent* render = static_cast<GameEngine::RenderComponent*>(btn->AddComponent<GameEngine::RenderComponent>());
 	render->SetFillColor(sf::Color::Red);
+<<<<<<< HEAD
+=======
+
+>>>>>>> ba6423c849a42e42456ec5f9a768cb29619495c6
 	soundCompon = static_cast<GameEngine::SoundComponent*>
 		(btn->AddComponent<GameEngine::SoundComponent>());
 
@@ -101,12 +105,6 @@ void GameBoard::AddBackground()
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::Background);
-
-	soundCompon = static_cast<GameEngine::SoundComponent*>
-		(bg->AddComponent<GameEngine::SoundComponent>());
-
-	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
-	soundCompon->PlaySound(soundId, true);
 }
 
 void GameBoard::AddObstacles()
