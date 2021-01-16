@@ -25,6 +25,7 @@ GameBoard::GameBoard() {
 	CreateOpponent();
 	AddObstacles();
 	CreatePlatform();
+	CreateCuts();
 }
 
 Menu::Menu() {
@@ -138,10 +139,12 @@ void GameBoard::AddObstacles()
 
 }
 
-void GameBoard::CreatePlatform(){
+const int num = 5;
 
-	const int num = 5;
+void GameBoard::CreatePlatform(){
 	
+	std::vector<sf::Vector2f()> fishCoords;
+	std::vector<sf::Vector2f()> cabbageCoords;
 	float x_coords[num]{ 320.f, 640.f, 960.f, 1280.f, 1600.f  };
 	float y_coords[num]{ 720.f, 550.f, 720.f, 550.f, 720.f };
 
@@ -163,6 +166,7 @@ void GameBoard::CreatePlatform(){
 		platform->AddComponent<PlatformComponent>();
 
 	}
+	
 }
 
 void GameBoard::CreateOpponent() {
@@ -196,6 +200,7 @@ void GameBoard::CreateOpponent() {
 	// opponent->AddComponent<PawnPhysicsComponent>();
 
 	this->opponent = opponent;
+
 }
 
 void GameBoard::CreatePlayer() {
@@ -247,4 +252,14 @@ void GameBoard::Update()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		//move selector to previous platform
 	}
+}
+
+void GameBoard::CreateCuts() {
+	cut = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(cut);
+	cut->SetPos(sf::Vector2f(100.0f, 100.0f));
+	cut->SetSize(sf::Vector2f(8.0f, 65.0f));
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
 }
