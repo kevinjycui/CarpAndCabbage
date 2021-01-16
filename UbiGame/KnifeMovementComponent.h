@@ -12,6 +12,8 @@ namespace Game
 
         virtual void Update() override;
         virtual void OnAddToWorld() override;
+
+        int direction;
+
     };
 };
-#pragma once

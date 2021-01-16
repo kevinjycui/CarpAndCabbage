@@ -5,8 +5,6 @@
 
 using namespace Game;
 
-static int direction = 1;
-
 void KnifeMovementComponent::Update()
 {
     __super::Update();
@@ -34,6 +32,7 @@ void KnifeMovementComponent::Update()
 
 void KnifeMovementComponent::OnAddToWorld() {
     __super::OnAddToWorld();
+    direction = 1;
 }
 
 KnifeMovementComponent::KnifeMovementComponent() {}
