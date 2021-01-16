@@ -30,9 +30,10 @@ namespace GameEngine
 
 			DottedLine,
 
+			ChiliPepper,
+
 			Count,
 
-			ChiliPepper,
 		};
 	}	
 
@@ -47,7 +48,7 @@ namespace GameEngine
 		case eTexture::FishRight: return "fish_right.png";
 		case eTexture::LettuceRight: return "lettuce_right.png";
 		case eTexture::Title: return "title.png";
-		case eTexture::ChiliPepper: return "chili.png";
+		case eTexture::ChiliPepper: return "pepper.png";
 		case eTexture::DottedLine: return "dotted_line.png";
 		}
 		return "UnknownTexType";

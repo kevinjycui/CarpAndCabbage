@@ -62,6 +62,30 @@ GameBoard::GameBoard() {
 
 	CreatePlatform();
 	CreateCuts();
+	CreatePepper();
+}
+
+void GameBoard::CreatePepper() {
+	// Creating user-moveable chili arrow
+	GameEngine::Entity* chiliArrow = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliArrow);
+
+	if (Socket::isFish) {
+		chiliArrow->SetPos(sf::Vector2f(960.0f, 0.0f));
+	}
+	else {
+		chiliArrow->SetPos(sf::Vector2f(0.0f, 0.0f));
+	}
+
+	chiliArrow->SetSize(sf::Vector2f(20.0f, 20.0f));
+	chiliArrow->AddComponent<Game::ChiliArrowMovementComponent>();
+
+	GameEngine::SpriteRenderComponent* chiliArrowSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliArrow->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	chiliArrowSpriteRender->SetFillColor(sf::Color::Transparent);
+	chiliArrowSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
+
+	obstacles.push_back(chiliArrow);
 }
 
 Menu::Menu() {
@@ -173,26 +197,6 @@ void GameBoard::AddObstacles()
 
 	}
 
-	// Creating user-moveable chili arrow
-	GameEngine::Entity* chiliArrow = new GameEngine::Entity();
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliArrow);
-
-	if (Socket::isFish) {
-		chiliArrow->SetPos(sf::Vector2f(960.0f, 0.0f));
-	}
-	else {
-		chiliArrow->SetPos(sf::Vector2f(0.0f, 0.0f));
-	}
-
-	chiliArrow->SetSize(sf::Vector2f(20.0f, 20.0f));
-	chiliArrow->AddComponent<Game::ChiliArrowMovementComponent>();
-
-	GameEngine::SpriteRenderComponent* chiliArrowSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliArrow->AddComponent<GameEngine::SpriteRenderComponent>());
-
-	chiliArrowSpriteRender->SetFillColor(sf::Color::Transparent);
-	chiliArrowSpriteRender->SetTexture(GameEngine::eTexture::Knife);
-
-	obstacles.push_back(chiliArrow);
 }
 
 int numFish = 2;

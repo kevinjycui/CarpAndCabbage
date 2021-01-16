@@ -44,6 +44,7 @@ namespace Game
 		GameEngine::Entity* bg; // <-- Added Member
 		void AddObstacles();
 		void CreatePlatform();
+		void CreatePepper();
 		std::vector<GameEngine::Entity*> obstacles;
 		std::vector<GameEngine::Entity*> fishPlatforms;
 		std::vector<GameEngine::Entity*> cabbagePlatforms;
