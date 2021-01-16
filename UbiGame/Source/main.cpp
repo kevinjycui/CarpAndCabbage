@@ -1,5 +1,7 @@
 #include "GameEngine/GameEngineMain.h"
 #include "../Socket.h"
+#include "sio_socket.h"
+#include <iostream>
 
 int main()
 {

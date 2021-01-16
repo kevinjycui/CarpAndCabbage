@@ -8,6 +8,9 @@
 #include <GameEngine/EntitySystem/Components/SoundComponent.h>
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
 #include "GameEngine/EntitySystem/Components/CollidablePhysicsComponent.h"
+#include "../Player.h"
+#include "../Socket.h"
+#include <string>
 #include "../../PawnPhysicsComponent.h"
 
 using namespace Game;
@@ -18,6 +21,7 @@ static int soundId;
 GameBoard::GameBoard() {
 	AddBackground();
 	CreatePlayer();
+	CreateOpponent();
 	AddObstacles();
 	CreatePlatform();
 }
@@ -80,40 +84,48 @@ void GameBoard::CreatePlatform(){
 	platform->AddComponent<PlatformComponent>();
 }
 
-void GameBoard::CreatePlayer()
-{
-	m_player = new GameEngine::Entity();
-	n_player = new GameEngine::Entity();
+void GameBoard::CreateOpponent() {
+	opponent = new Player(Socket::opponentId);
 
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(m_player);
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(n_player);
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(opponent);
 
-	m_player->SetPos(sf::Vector2f(640.0f, 150.0f));
-	m_player->SetSize(sf::Vector2f(128.0f, 128.0f));
+	opponent->SetPos(sf::Vector2f(2 * 640.0f, 150.0f));
+	opponent->SetSize(sf::Vector2f(128.0f, 128.0f));
 
-	n_player->SetPos(sf::Vector2f(2 * 640.0f, 150.0f));
-	n_player->SetSize(sf::Vector2f(128.0f, 128.0f));
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(opponent->AddComponent<GameEngine::SpriteRenderComponent>());
 
-	//Render
-	GameEngine::SpriteRenderComponent* spriteRender1 = static_cast<GameEngine::SpriteRenderComponent*>(m_player->AddComponent<GameEngine::SpriteRenderComponent>());
-	GameEngine::SpriteRenderComponent* spriteRender2 = static_cast<GameEngine::SpriteRenderComponent*>(n_player->AddComponent<GameEngine::SpriteRenderComponent>());
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Lettuce);
 
-	spriteRender1->SetFillColor(sf::Color::Transparent);
-	spriteRender1->SetTexture(GameEngine::eTexture::Fish);
-	
-	spriteRender2->SetFillColor(sf::Color::Transparent);
-	spriteRender2->SetTexture(GameEngine::eTexture::Lettuce);
+	opponent->AddComponent<Game::PlayerMovementComponent>();
+	opponent->AddComponent<GameEngine::CollidablePhysicsComponent>();
 
-	//Movement
-	m_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
-	n_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
+	// opponent->AddComponent<PawnPhysicsComponent>();
 
-	m_player->AddComponent < GameEngine::CollidablePhysicsComponent>();
-	n_player->AddComponent < GameEngine::CollidablePhysicsComponent>();
-
-	//m_player->AddComponent < PawnPhysicsComponent>();
-	//n_player->AddComponent < PawnPhysicsComponent>();
+	this->opponent = opponent;
 }
+
+void GameBoard::CreatePlayer() {
+	player = new Player(Socket::playerId);
+
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(player);
+
+	player->SetPos(sf::Vector2f(640.0f, 150.0f));
+	player->SetSize(sf::Vector2f(128.0f, 128.0f));
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(player->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Fish);
+
+
+	player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
+	player->AddComponent<GameEngine::CollidablePhysicsComponent>();
+	// player->AddComponent<PawnPhysicsComponent>();
+
+	this->player = player;
+}
+
 
 GameBoard::~GameBoard()
 {

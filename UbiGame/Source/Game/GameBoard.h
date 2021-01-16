@@ -3,6 +3,7 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <vector>
+#include "../Player.h"
 
 namespace Game
 {
@@ -20,8 +21,10 @@ namespace Game
 
 	private:
 		void CreatePlayer();          // <-- Added Function
-		GameEngine::Entity* m_player; // <-- Added Member
-		GameEngine::Entity* n_player; // <-- Added Member
+		void CreateOpponent();
+		Player* player; // <-- Added Member
+		Player* opponent; // <-- Added Member
+
 		void AddBackground();
 		GameEngine::Entity* bg; // <-- Added Member
 		void AddObstacles();
