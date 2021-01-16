@@ -3,6 +3,7 @@
 
 #include "GameEngine/GameEngineMain.h" //<-- Add this include to retrieve the delta time between frames
 #include "../Socket.h"
+#include <ctime>
 
 using namespace Game;
 
@@ -24,12 +25,15 @@ void ChiliPepperMovementComponent::Update()
 
     //Update the entity position
     GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
+
 }
 
 void ChiliPepperMovementComponent::OnAddToWorld() {
     __super::OnAddToWorld();
 }
 
-ChiliPepperMovementComponent::ChiliPepperMovementComponent() {}
+ChiliPepperMovementComponent::ChiliPepperMovementComponent() {
+
+}
 
 ChiliPepperMovementComponent::~ChiliPepperMovementComponent() {}

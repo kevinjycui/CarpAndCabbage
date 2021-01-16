@@ -18,6 +18,7 @@
 #include "../Socket.h"
 #include "sio_socket.h"
 #include "json.hpp"
+#include <iostream>
 
 using sio::socket;
 using sio::message;
@@ -34,6 +35,7 @@ GameBoard::GameBoard() {
 
 	Socket::io.socket()->on("chiliAttack", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
 		auto payload = nlohmann::json::parse(data->get_string());
+		std::cout << "oauaoeuoeu";
 		float x = payload["x"];
 		std::string activatedById = payload["activatedById"];
 
@@ -52,7 +54,7 @@ GameBoard::GameBoard() {
 		}
 
 		chiliPepper->SetSize(sf::Vector2f(20.0f, 20.0f));
-		chiliPepper->AddComponent<Game::ChiliArrowMovementComponent>();
+		chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
 		chiliPepper->AddComponent<GameEngine::CollidableComponent>();
 
 		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
@@ -180,7 +182,7 @@ void GameBoard::AddObstacles()
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliArrow);
 
 	if (Socket::isFish) {
-		chiliArrow->SetPos(sf::Vector2f(540.0f, 0.0f));
+		chiliArrow->SetPos(sf::Vector2f(960.0f, 0.0f));
 	}
 	else {
 		chiliArrow->SetPos(sf::Vector2f(0.0f, 0.0f));
@@ -198,7 +200,6 @@ void GameBoard::AddObstacles()
 }
 
 void GameBoard::CreatePlatform(){
-
 	const int num = 5;
 	
 	float x_coords[num]{ 320.f, 640.f, 960.f, 1280.f, 1600.f  };
@@ -221,7 +222,6 @@ void GameBoard::CreatePlatform(){
 		platform->AddComponent<GameEngine::CollidableComponent>();
 		platform->AddComponent<PlatformComponent>();
 
-		platforms.push_back(platform);
 	}
 }
 
