@@ -39,7 +39,7 @@ void GameBoard::AddBackground()
 }
 
 void GameBoard::AddObstacles()
-{
+{	
 	GameEngine::Entity* knife = new GameEngine::Entity();
 
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(knife);
@@ -55,6 +55,18 @@ void GameBoard::AddObstacles()
 	spriteRender->SetTexture(GameEngine::eTexture::Knife);
 
 	obstacles.push_back(knife);
+
+	GameEngine::Entity* platform = new GameEngine::Entity();
+
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(platform);
+
+	platform->SetPos(sf::Vector2f(640.0f, 550.0f));
+	platform->SetSize(sf::Vector2f(175.0f, 50.0f));
+
+	GameEngine::RenderComponent* render = platform->AddComponent<GameEngine::RenderComponent>(); // <-- Capturing the new component
+
+	render->SetFillColor(sf::Color::Red); // <-- Change the fill color to Red
+
 }
 
 void GameBoard::CreatePlayer()
@@ -84,6 +96,7 @@ void GameBoard::CreatePlayer()
 	//Movement
 	m_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	n_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
+
 }
 
 GameBoard::~GameBoard()
