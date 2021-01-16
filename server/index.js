@@ -32,8 +32,8 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('movePlayer', (payloadJSON) => {
+		console.log(`${socket.id} sends out update move player: ${payloadJSON}`)
 		const payload = JSON.parse(payloadJSON);
-		console.log(`${socket.id} sends out update move player: ${payload}`)
 		socket.broadcast.to(socketRoomId).emit('movePlayer',  JSON.stringify({
 			x: payload.x,
 			y: payload.y,

@@ -7,6 +7,9 @@
 #include <iostream>
 #include <string>
 
+#include "GameEngine/EntitySystem/Components/CollidableComponent.h"
+#include "GameEngine/Util/CollisionManager.h"
+using namespace GameEngine;
 using namespace Game;
 using sio::socket;
 using sio::message;
@@ -22,6 +25,8 @@ void PlayerMovementComponent::Update()
     sf::Vector2f displacement{ 0.0f,0.0f };
     sf::Vector2f position = GetEntity()->GetPos();
 
+    std::cout << "isJumping: " << isJumping << std::endl;
+
     //The amount of speed that we will apply when input is received
     const float inputAmount = 300.0f;
 
@@ -34,7 +39,21 @@ void PlayerMovementComponent::Update()
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        displacement.y -= inputAmount * dt * 2;
+        // Jumping for the first time
+        if (!isJumping) {
+            isJumping = true;
+            prevJumpIncrement = -inputAmount * dt * 2;
+            displacement.y += prevJumpIncrement;
+        }
+    }
+
+    // If user is currently in middle of jump
+    if (isJumping) {
+        // If jump is significant enough
+        if (abs(prevJumpIncrement / 2) >= 1) {
+            displacement.y -= prevJumpIncrement / 2;
+            prevJumpIncrement /= 2;
+        }
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
@@ -68,12 +87,42 @@ void PlayerMovementComponent::Update()
         }
     }
 
+    //For the time being just a simple intersection check that moves the entity out of all potential intersect boxes
+    std::vector<CollidableComponent*>& collidables = CollisionManager::GetInstance()->GetCollidables();
+
+    auto size = this->GetEntity()->GetSize();
 
     // Update the entity position locally
-    GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
-
     sf::Vector2f gravity{ 0.0f, 1.0f };
-    GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
+    displacement += gravity;
+    sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
+
+    for (int a = 0; a < collidables.size(); ++a)
+    {
+        CollidableComponent* colComponent = collidables[a];
+        if (colComponent->GetEntity() == this->GetEntity())
+            continue;
+
+        AABBRect intersection;
+        AABBRect myBox = AABBRect(newPos, size);
+        std::cout << size.x << " " << size.y << '\n';
+
+        AABBRect collideBox = colComponent->GetWorldAABB();
+
+
+        if (myBox.intersects(collideBox))
+        {
+            // Collides A
+            //          B
+            // a.k.a. user has landed on a platform
+            if (myBox.top <= collideBox.top) {
+                std::cout << "collision\n";
+                isJumping = false;
+            }
+        }
+    }
+
+    GetEntity()->SetPos(newPos);
 
     // Only send update to server when user has moved
     nlohmann::json j;
@@ -86,6 +135,9 @@ void PlayerMovementComponent::OnAddToWorld() {
     __super::OnAddToWorld();
 }
 
-PlayerMovementComponent::PlayerMovementComponent(){}
+PlayerMovementComponent::PlayerMovementComponent(){
+    isJumping = false;
+    prevJumpIncrement = 0.0f;
+}
 
 PlayerMovementComponent::~PlayerMovementComponent() {}
