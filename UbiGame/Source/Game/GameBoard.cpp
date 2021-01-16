@@ -35,27 +35,22 @@ GameBoard::GameBoard() {
 
 	Socket::io.socket()->on("chiliAttack", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
 		auto payload = nlohmann::json::parse(data->get_string());
-		std::cout << "oauaoeuoeu";
 		float x = payload["x"];
 		std::string activatedById = payload["activatedById"];
-
-		// Don't activate the fireball for the player who activated it
-		if (activatedById == Socket::playerId) return;
 
 		// Creating the chili pepper
 		GameEngine::Entity* chiliPepper = new GameEngine::Entity();
 		GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliPepper);
 
-		if (Socket::isFish) {
-			chiliPepper->SetPos(sf::Vector2f(960.0f + x, 0.0f));
+		if (activatedById == Socket::playerId) {
+			chiliPepper->SetPos(sf::Vector2f(960.0f + x, 25.0f));
 		}
 		else {
-			chiliPepper->SetPos(sf::Vector2f(0.0f, 0.0f));
+			chiliPepper->SetPos(sf::Vector2f(0.0f + x, 25.0f));
 		}
 
 		chiliPepper->SetSize(sf::Vector2f(20.0f, 20.0f));
 		chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
-		chiliPepper->AddComponent<GameEngine::CollidableComponent>();
 
 		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
 
