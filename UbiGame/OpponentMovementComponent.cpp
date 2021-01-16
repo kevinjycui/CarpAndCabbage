@@ -18,17 +18,15 @@ void OpponentMovementComponent::Update()
 
 void OpponentMovementComponent::OnAddToWorld() {
     __super::OnAddToWorld();
+    Socket::io.socket()->on("movePlayer", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+        // std::cout << data->get_string();
+        auto payload = nlohmann::json::parse(data->get_string());
+        sf::Vector2f pos{ payload["x"], payload["y"] };
+        GetEntity()->SetPos(pos);
+    }));
 }
 
 OpponentMovementComponent::OpponentMovementComponent() {
-    Socket::io.socket()->on("movePlayer", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
-        std::cout << data->get_string();
-        auto payload = nlohmann::json::parse(data->get_string());
-        if (Socket::opponentId == payload["playerId"]) {
-            sf::Vector2f pos{ payload["x"], payload["y"] };
-            GetEntity()->SetPos(pos);
-        }
-    }));
 }
 
 OpponentMovementComponent::~OpponentMovementComponent() {}

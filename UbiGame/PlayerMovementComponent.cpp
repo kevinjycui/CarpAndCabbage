@@ -6,6 +6,7 @@
 #include "../Socket.h"
 #include <iostream>
 #include <string>
+#include <GameEngine/EntitySystem/Components/SpriteRenderComponent.h>
 
 using namespace Game;
 using sio::socket;
@@ -30,7 +31,7 @@ void PlayerMovementComponent::Update()
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        displacement.x += inputAmount * dt;
+        displacement.x += inputAmount * dt; 
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -88,10 +89,12 @@ void PlayerMovementComponent::Update()
     GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
 
     // Only send update to server when user has moved
-    nlohmann::json j;
-    j["x"] = GetEntity()->GetPos().x;
-    j["y"] = GetEntity()->GetPos().y;
-    Socket::io.socket()->emit("movePlayer", j.dump());
+    if (GetEntity()->GetPos() != position) {
+        nlohmann::json j;
+        j["x"] = GetEntity()->GetPos().x;
+        j["y"] = GetEntity()->GetPos().y;
+        Socket::io.socket()->emit("movePlayer", j.dump());
+    }
 }
 
 void PlayerMovementComponent::OnAddToWorld() {
