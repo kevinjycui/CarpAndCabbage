@@ -18,12 +18,12 @@ void GameBoard::CreatePlayer()
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(m_player);
 
 	m_player->SetPos(sf::Vector2f(50.0f, 50.0f));
-	m_player->SetSize(sf::Vector2f(50.0f, 50.0f));
+	m_player->SetSize(sf::Vector2f(100.0f, 100.0f));
 
 	//Render
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(m_player->AddComponent<GameEngine::SpriteRenderComponent>());
 
-	spriteRender->SetFillColor(sf::Color::Red);
+	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::Player);
 
 	//Movement
