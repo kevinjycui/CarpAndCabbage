@@ -24,8 +24,6 @@ void ChiliArrowMovementComponent::Update()
 {
     __super::Update();
 
-    GameEngine::SpriteRenderComponent* playerSprite = GetEntity()->GetComponent<GameEngine::SpriteRenderComponent>();
-
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
 
@@ -59,7 +57,14 @@ void ChiliArrowMovementComponent::Update()
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
     GetEntity()->SetPos(newPos);
 
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        // 5 second cooldown
+        if (difftime(std::time(nullptr), lastActivated) <= 5) {
+            return;
+        }
+        lastActivated = std::time(nullptr);
+
         nlohmann::json j;
         j["x"] = GetEntity()->GetPos().x;
         j["activatedById"] = Socket::playerId;
@@ -72,6 +77,7 @@ void ChiliArrowMovementComponent::OnAddToWorld() {
 }
 
 ChiliArrowMovementComponent::ChiliArrowMovementComponent() {
+    lastActivated = std::time(nullptr);
 }
 
 ChiliArrowMovementComponent::~ChiliArrowMovementComponent() {}

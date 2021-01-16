@@ -2,6 +2,7 @@
 
 #include "GameEngine/EntitySystem/Component.h"
 
+
 namespace Game
 {
     class ChiliPepperMovementComponent : public GameEngine::Component
@@ -12,5 +13,6 @@ namespace Game
 
         virtual void Update() override;
         virtual void OnAddToWorld() override;
+
     };
 };
