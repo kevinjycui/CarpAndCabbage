@@ -18,7 +18,6 @@ float GameEngineMain::WINDOW_WIDTH = 1920;
 GameEngineMain* GameEngineMain::sm_instance = nullptr;
 sf::Clock		GameEngineMain::sm_deltaTimeClock;
 sf::Clock		GameEngineMain::sm_gameClock;
-sio::client h;
 
 
 GameEngineMain::GameEngineMain()
@@ -26,8 +25,7 @@ GameEngineMain::GameEngineMain()
 	, m_gameBoard(nullptr)
 	, m_windowInitialised(false)
 {
-	// Connect to Socket.IO server
-	h.connect("http://127.0.0.1:3000");
+
 
 	CreateAndSetUpWindow();
 	//Load predefined textures

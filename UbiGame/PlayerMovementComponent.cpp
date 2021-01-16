@@ -2,6 +2,8 @@
 #include <SFML/Window/Keyboard.hpp>   //<-- Add the keyboard include in order to get keyboard inputs
 
 #include "GameEngine/GameEngineMain.h" //<-- Add this include to retrieve the delta time between frames
+#include "json.hpp"
+#include "../Socket.h"
 
 using namespace Game;
 
@@ -76,8 +78,13 @@ void PlayerMovementComponent::Update()
         break;
     }
 
-    //Update the entity position
+    // Update the entity position locally
     GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
+
+    nlohmann::json j;
+    j["x"] = GetEntity()->GetPos().x;
+    j["y"] = GetEntity()->GetPos().y;
+    Socket::io.socket()->emit("update", j.dump());
 }
 
 void PlayerMovementComponent::OnAddToWorld() {
