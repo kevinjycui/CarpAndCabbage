@@ -5,12 +5,16 @@ const io = require('socket.io')(http);
 io.on('connection', (socket) => {
 	console.log(`connection by socket ${socket.id}`);
 
-	socket.on('joinRoom', (roomId) => {
+	// The socket's room ID
+	let socketRoomId;
+
+	socket.on('joinRoom', (roomId, ack) => {
 		console.log(`${socket.id} has joined ${roomId}`);
 		socket.join(roomId);
+		socketRoomId = roomId;
 
 		// If only one person in the room
-		if (io.sockets.adapter.rooms[roomId].length <= 1) {
+		if (io.sockets.adapter.rooms[roomId] == null || io.sockets.adapter.rooms[roomId].length <= 1) {
 			// Tell client that they are the first in room, client will display
 			// something like a waiting screen
 			io.to(socket.id).emit('firstInRoom');
@@ -23,13 +27,18 @@ io.on('connection', (socket) => {
 		else {
 			socket.broadcast.to(roomId).emit('newPlayer', socket.id);
 		}
+
+		ack(socket.id);
 	});
 
-	// This is sent by clients to update something/send an event to the other
-	// player's game
-	socket.on('update', (payload) => {
-		console.log(`${socket.id} sends out update: ${payload}`)
-		socket.broadcast.to(payload.roomId).emit(payload);
+	socket.on('movePlayer', (payloadJSON) => {
+		const payload = JSON.parse(payloadJSON);
+		console.log(`${socket.id} sends out update move player: ${payload}`)
+		socket.broadcast.to(socketRoomId).emit('movePlayer',  JSON.stringify({
+			x: payload.x,
+			y: payload.y,
+			playerId: socket.id
+		}));
 	});
 
 	// Cleaning up when a socket disconencts

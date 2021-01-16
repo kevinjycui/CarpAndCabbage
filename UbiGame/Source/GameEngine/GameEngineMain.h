@@ -7,6 +7,7 @@
 
 #include "GameEngine/EntitySystem/Entity.h"
 #include "GameEngine/EntitySystem/Components/RenderComponent.h"
+#include "sio_client.h"
 
 namespace GameEngine
 {
@@ -30,6 +31,7 @@ namespace GameEngine
 		void OnInitialised();
 		void StartGame();
 		bool IsGameOver() const { return m_gameBoard && m_gameBoard->IsGameOver(); }
+		sio::client h;
 
 	private:
 		GameEngineMain();
