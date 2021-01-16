@@ -79,9 +79,8 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
-                sf::Vector2f gravity{ 0.0f, velocity_y };
-                GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
-                return;
+                displacement.x = 0.f;
+                displacement.y = 0.f;
         }
     }
     else {
@@ -97,9 +96,8 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ 1920 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
-                sf::Vector2f gravity{ 0.0f, velocity_y };
-                GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
-                return;
+                displacement.x = 0.f;
+                displacement.y = 0.f;
         }
     }
 
@@ -108,11 +106,6 @@ void PlayerMovementComponent::Update()
 
     auto size = this->GetEntity()->GetSize();
 
-    // Update the entity position locally
-    sf::Vector2f gravity{ 0.0f, velocity_y };
-    displacement += gravity;
-    sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
-
     for (int a = 0; a < collidables.size(); ++a)
     {
         CollidableComponent* colComponent = collidables[a];
@@ -120,24 +113,34 @@ void PlayerMovementComponent::Update()
             continue;
 
         AABBRect intersection;
-        AABBRect myBox = AABBRect(newPos, size);\
+        AABBRect myBox = AABBRect(position, size);
 
-        AABBRect collideBox = colComponent->GetWorldAABB();
-
-        if (myBox.intersects(collideBox))
-        {
+        AABBRect collideBox = AABBRect(
+            colComponent->GetEntity()->GetPos(), colComponent->GetEntity()->GetSize()); //colComponent->GetWorldAABB();
             // Collides A
             //          B
             // a.k.a. user has landed on a platform
-            if (myBox.top <= collideBox.top) {
-                velocity_y = 0.f;
 
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                    velocity_y = -4.f;
-                }
+        if (myBox.top + 1.9*collideBox.height >= collideBox.top &&
+            myBox.top <= collideBox.top + collideBox.height &&
+            myBox.left <= collideBox.left + myBox.width &&
+            myBox.left + myBox.width >= collideBox.left) {
+
+            std::cout << myBox.top << " " << myBox.height << " " << collideBox.top << " " << collideBox.height << "\n";
+
+            velocity_y = 0.f;
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                velocity_y = -6.f;
             }
         }
     }
+
+    // Update the entity position locally
+    sf::Vector2f gravity{ 0.0f, velocity_y };
+    displacement += gravity;
+
+    sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
 
     GetEntity()->SetPos(newPos);
 
