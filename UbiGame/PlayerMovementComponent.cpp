@@ -80,11 +80,14 @@ void PlayerMovementComponent::Update()
 
     // Update the entity position locally
     GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
-
-    nlohmann::json j;
-    j["x"] = GetEntity()->GetPos().x;
-    j["y"] = GetEntity()->GetPos().y;
-    Socket::io.socket()->emit("update", j.dump());
+    
+    // Only send update to server when user has moved
+    if (displacement.x != 0 || displacement.y != 0) {
+        nlohmann::json j;
+        j["x"] = GetEntity()->GetPos().x;
+        j["y"] = GetEntity()->GetPos().y;
+        Socket::io.socket()->emit("update", j.dump());
+    }
 }
 
 void PlayerMovementComponent::OnAddToWorld() {
