@@ -89,7 +89,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\socket.io-client-cpp\lib\rapidjson\include\;$(SolutionDir)..\socket.io-client-cpp\lib\websocketpp\;$(SolutionDir)..\socket.io-client-cpp\src;$(SolutionDir)..\socket.io-client-cpp\lib\asio\asio\include\;$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)..\SFML-2.5.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -105,8 +106,9 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\socket.io-client-cpp\lib\rapidjson\include\;$(SolutionDir)..\socket.io-client-cpp\lib\websocketpp\;$(SolutionDir)..\socket.io-client-cpp\src;$(SolutionDir)..\socket.io-client-cpp\lib\asio\asio\include\;$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WEBSOCKETPP_CPP11_STL;_WEBSOCKETPP_CPP11_FUNCTIONAL_;ASIO_STANDALONE;BOOST_DATE_TIME_NO_LIB;BOOST_REGEX_NO_LIB;_WEBSOCKETPP_CPP11_TYPE_TRAITS_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -163,6 +165,10 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\socket.io-client-cpp\src\internal\sio_client_impl.cpp" />
+    <ClCompile Include="..\socket.io-client-cpp\src\internal\sio_packet.cpp" />
+    <ClCompile Include="..\socket.io-client-cpp\src\sio_client.cpp" />
+    <ClCompile Include="..\socket.io-client-cpp\src\sio_socket.cpp" />
     <ClCompile Include="PlayerMovementComponent.cpp" />
     <ClCompile Include="KnifeMovementComponent.cpp" />
     <ClCompile Include="Source\GameEngine\EntitySystem\Components\TextRenderComponent.cpp" />
@@ -186,6 +192,11 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
     <ClCompile Include="Source\GameEngine\EntitySystem\Components\SpriteRenderComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\socket.io-client-cpp\src\internal\sio_client_impl.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\internal\sio_packet.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\sio_client.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\sio_message.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\sio_socket.h" />
     <ClInclude Include="KnifeMovementComponent.h" />
     <ClInclude Include="PlayerMovementComponent.h" />
     <ClInclude Include="Source\GameEngine\EntitySystem\Components\TextRenderComponent.h" />

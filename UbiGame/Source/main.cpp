@@ -1,4 +1,8 @@
+#define _WEBSOCKETPP_CPP11_FUNCTIONAL_
 #include "GameEngine/GameEngineMain.h"
+#include "sio_client.h"
+
+sio::client h;
 
 int main()
 {
