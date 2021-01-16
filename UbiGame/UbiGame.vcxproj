@@ -169,6 +169,7 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
     <ClCompile Include="..\socket.io-client-cpp\src\internal\sio_packet.cpp" />
     <ClCompile Include="..\socket.io-client-cpp\src\sio_client.cpp" />
     <ClCompile Include="..\socket.io-client-cpp\src\sio_socket.cpp" />
+    <ClCompile Include="PlatformComponent.cpp" />
     <ClCompile Include="PlayerMovementComponent.cpp" />
     <ClCompile Include="KnifeMovementComponent.cpp" />
     <ClCompile Include="Source\GameEngine\EntitySystem\Components\TextRenderComponent.cpp" />
@@ -198,6 +199,7 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
     <ClInclude Include="..\socket.io-client-cpp\src\sio_message.h" />
     <ClInclude Include="..\socket.io-client-cpp\src\sio_socket.h" />
     <ClInclude Include="KnifeMovementComponent.h" />
+    <ClInclude Include="PlatformComponent.h" />
     <ClInclude Include="PlayerMovementComponent.h" />
     <ClInclude Include="Source\GameEngine\EntitySystem\Components\TextRenderComponent.h" />
     <ClInclude Include="Source\GameEngine\Util\CameraManager.h" />
