@@ -29,7 +29,7 @@ namespace GameEngine
 		void RemoveEntity(Entity* entity);
 
 		void OnInitialised();
-		void StartGame();
+		void StartGame(bool isFish);
 		bool IsGameOver() const { return m_gameBoard && m_gameBoard->IsGameOver(); }
 		sio::client h;
 

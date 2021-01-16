@@ -29,6 +29,8 @@
     <ClCompile Include="Source\GameEngine\Util\TextureManager.cpp" />
     <ClCompile Include="Source\GameEngine\EntitySystem\Components\SpriteRenderComponent.cpp" />
     <ClCompile Include="PawnPhysicsComponent.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="OpponentMovementComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameEngine\GameEngineMain.cpp">
@@ -109,91 +111,37 @@
     <ClCompile Include="Socket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\GameEngine\GameEngineMain.h">
-      <Filter>Source Files\GameEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\RenderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\GameBoard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\Util\CollisionManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\CollidableComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\CollidablePhysicsComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\Util\TextureManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\SpriteRenderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\AnimationComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\Util\AnimationManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\ParticleComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\ParticleEmitterComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\SoundComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\Util\SoundManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\Util\CameraManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameEngine\EntitySystem\Components\TextRenderComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerMovementComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KnifeMovementComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\socket.io-client-cpp\src\sio_client.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\socket.io-client-cpp\src\sio_message.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\socket.io-client-cpp\src\sio_socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\socket.io-client-cpp\src\internal\sio_client_impl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\socket.io-client-cpp\src\internal\sio_packet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Socket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\socket.io-client-cpp\src\internal\sio_client_impl.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\internal\sio_packet.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\sio_client.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\sio_message.h" />
+    <ClInclude Include="..\socket.io-client-cpp\src\sio_socket.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PawnPhysicsComponent.h" />
+    <ClInclude Include="Socket.h" />
+    <ClInclude Include="KnifeMovementComponent.h" />
+    <ClInclude Include="PlatformComponent.h" />
+    <ClInclude Include="PlayerMovementComponent.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\TextRenderComponent.h" />
+    <ClInclude Include="Source\GameEngine\Util\CameraManager.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\ParticleComponent.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\ParticleEmitterComponent.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\SoundComponent.h" />
+    <ClInclude Include="Source\GameEngine\Util\AnimationManager.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\AnimationComponent.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\CollidablePhysicsComponent.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\CollidableComponent.h" />
+    <ClInclude Include="Source\GameEngine\Util\CollisionManager.h" />
+    <ClInclude Include="Source\GameEngine\Util\SoundManager.h" />
+    <ClInclude Include="Source\Game\GameBoard.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\RenderComponent.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Component.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Entity.h" />
+    <ClInclude Include="Source\GameEngine\GameEngineMain.h" />
+    <ClInclude Include="Source\GameEngine\Util\TextureManager.h" />
+    <ClInclude Include="Source\GameEngine\EntitySystem\Components\SpriteRenderComponent.h" />
+    <ClInclude Include="OpponentMovementComponent.h" />
   </ItemGroup>
 </Project>

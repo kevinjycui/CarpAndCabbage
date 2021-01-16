@@ -8,16 +8,13 @@ using namespace Game;
 void PlayerMovementComponent::Update()
 {
     __super::Update();
+    float playerVelocity = 300.f;
+    float jumpVelocity = 1000.f;
+    sf::Vector2f wantedVelocity = sf:Vector2f{ 0.0f,0.0f };
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
 
-    //By default the displacement is 0,0
-    sf::Vector2f displacement{ 0.0f,0.0f };
-    sf::Vector2f position = GetEntity()->GetPos();
-
-    //The amount of speed that we will apply when input is received
-    const float inputAmount = 300.0f;
 
     bool wasd = position.x <= 1920.0f / 2;
 
@@ -25,17 +22,24 @@ void PlayerMovementComponent::Update()
     case true:
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
-            displacement.x -= inputAmount * dt;
+            wantedVelocity.x -= playerVelocity;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
         {
-            displacement.x += inputAmount * dt;
+            wantedVelocity.x -= playerVelocity;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
         {
-            displacement.y -= inputAmount * dt;
+            if (!m_wasJumpButtonPressed)
+            {
+                wantevdVelocity.y -= jumpVelocity;
+                m_wasJumpButtonPressed = True;
+            }
+        }
+        else {
+            m_wasJumpButtonPressed = False;
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
