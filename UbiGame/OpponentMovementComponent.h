@@ -1,17 +1,17 @@
 #pragma once
 
 #include "GameEngine/EntitySystem/Component.h"
-#include <string>
 
 namespace Game
 {
-    class PlayerMovementComponent : public GameEngine::Component
+    class OpponentMovementComponent : public GameEngine::Component
     {
     public:
-        PlayerMovementComponent();
-        ~PlayerMovementComponent();
+        OpponentMovementComponent();
+        ~OpponentMovementComponent();
 
         virtual void Update() override;
         virtual void OnAddToWorld() override;
     };
 };
+#pragma once

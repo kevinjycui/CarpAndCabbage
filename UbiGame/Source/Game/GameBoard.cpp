@@ -2,6 +2,7 @@
 
 #include "GameEngine/GameEngineMain.h"
 #include "../../PlayerMovementComponent.h"
+#include "../../OpponentMovementComponent.h"
 #include "../../KnifeMovementComponent.h"
 #include "../../PlatformComponent.h"
 #include "GameEngine/EntitySystem/Components/SpriteRenderComponent.h"
@@ -171,15 +172,28 @@ void GameBoard::CreateOpponent() {
 
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(opponent);
 
-	opponent->SetPos(sf::Vector2f(2 * 640.0f, 150.0f));
+	// If player is the fish, opponent is the lettuce
+	if (Socket::isFish) {
+		opponent->SetPos(sf::Vector2f(2 * 640.0f, 150.0f));
+	}
+	else {
+		opponent->SetPos(sf::Vector2f(640.0f, 150.0f));
+	}
+
 	opponent->SetSize(sf::Vector2f(128.0f, 128.0f));
 
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(opponent->AddComponent<GameEngine::SpriteRenderComponent>());
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::Lettuce);
 
-	opponent->AddComponent<Game::PlayerMovementComponent>();
+	if (Socket::isFish) {
+		spriteRender->SetTexture(GameEngine::eTexture::Lettuce);
+	}
+	else {
+		spriteRender->SetTexture(GameEngine::eTexture::Fish);
+	}
+
+	opponent->AddComponent<Game::OpponentMovementComponent>();
 	opponent->AddComponent<GameEngine::CollidablePhysicsComponent>();
 
 	// opponent->AddComponent<PawnPhysicsComponent>();
@@ -192,14 +206,25 @@ void GameBoard::CreatePlayer() {
 
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(player);
 
-	player->SetPos(sf::Vector2f(640.0f, 150.0f));
+	if (Socket::isFish) {
+		player->SetPos(sf::Vector2f(640.0f, 150.0f));
+	}
+	else {
+		player->SetPos(sf::Vector2f(2 * 640.0f, 150.0f));
+	}
+
 	player->SetSize(sf::Vector2f(128.0f, 128.0f));
 
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(player->AddComponent<GameEngine::SpriteRenderComponent>());
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::Fish);
 
+	if (Socket::isFish) {
+		spriteRender->SetTexture(GameEngine::eTexture::Fish);
+	}
+	else {
+		spriteRender->SetTexture(GameEngine::eTexture::Lettuce);
+	}
 
 	player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	player->AddComponent<GameEngine::CollidablePhysicsComponent>();
