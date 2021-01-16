@@ -17,6 +17,7 @@ GameBoard::GameBoard() {
 	AddBackground();
 	CreatePlayer();
 	AddObstacles();
+	CreatePlatform();
 }
 
 void GameBoard::AddBackground()
@@ -57,7 +58,9 @@ void GameBoard::AddObstacles()
 	spriteRender->SetTexture(GameEngine::eTexture::Knife);
 
 	obstacles.push_back(knife);
+}
 
+void GameBoard::CreatePlatform(){
 	GameEngine::Entity* platform = new GameEngine::Entity();
 
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(platform);
