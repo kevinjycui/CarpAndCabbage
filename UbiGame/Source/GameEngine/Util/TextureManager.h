@@ -35,7 +35,7 @@ namespace GameEngine
 	inline const char* GetPath(eTexture::type texture)
 	{
 		switch (texture) {
-		case eTexture::Fish: return "fish.png";
+		case eTexture::Fish: return "fish_tiled.png";
 		case eTexture::Lettuce: return "lettuce.png";
 		case eTexture::Knife: return "knife.png";
 		case eTexture::Background: return "bg.png";

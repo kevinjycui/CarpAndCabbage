@@ -13,5 +13,8 @@ namespace Game
 
         virtual void Update() override;
         virtual void OnAddToWorld() override;
+
+        float lastAnimation;
+        int m_currentFaceIndex;
     };
 };
