@@ -11,8 +11,8 @@
 
 using namespace GameEngine;
 
-float GameEngineMain::WINDOW_HEIGHT = 1600;
-float GameEngineMain::WINDOW_WIDTH = 2800;
+float GameEngineMain::WINDOW_HEIGHT = 720;
+float GameEngineMain::WINDOW_WIDTH = 1280;
 //Nullptr init for singleton class
 GameEngineMain* GameEngineMain::sm_instance = nullptr;
 sf::Clock		GameEngineMain::sm_deltaTimeClock;
