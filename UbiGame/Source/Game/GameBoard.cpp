@@ -162,6 +162,7 @@ void GameBoard::CreatePlatform(){
 		platform->AddComponent<GameEngine::CollidableComponent>();
 		platform->AddComponent<PlatformComponent>();
 
+		platforms.push_back(platform);
 	}
 }
 
