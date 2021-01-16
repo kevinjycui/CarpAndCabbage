@@ -19,7 +19,7 @@ void PlayerMovementComponent::Update()
     //The amount of speed that we will apply when input is received
     const float inputAmount = 300.0f;
 
-    bool wasd = position.x <= 1920.0f / 2;
+    bool wasd = position.x <= 1920.0f / 2 + GetEntity()->GetSize().y / 2;
 
     switch (wasd) {
     case true:
@@ -43,9 +43,9 @@ void PlayerMovementComponent::Update()
             displacement.y += inputAmount * dt;
         }
         if ((position + displacement).x <= GetEntity()->GetSize().y / 2 ||
-            (position + displacement).x > 1920 / 2 - GetEntity()->GetSize().y ||
+            (position + displacement).x > 1920 / 2 - GetEntity()->GetSize().y / 2 ||
             (position + displacement).y <= GetEntity()->GetSize().y / 2 ||
-            (position + displacement).y > 1080 - GetEntity()->GetSize().y)
+            (position + displacement).y > 1080 - GetEntity()->GetSize().y / 2)
             return;
         break;
     case false:
@@ -69,7 +69,7 @@ void PlayerMovementComponent::Update()
             displacement.y += inputAmount * dt;
         }
         if ((position + displacement).x > 1920 - GetEntity()->GetSize().y / 2 ||
-            (position + displacement).x <= 1920 / 2 ||
+            (position + displacement).x <= 1920 / 2 + GetEntity()->GetSize().y / 2 ||
             (position + displacement).y <= GetEntity()->GetSize().y / 2 ||
             (position + displacement).y > 1080 - GetEntity()->GetSize().y / 2)
             return;
