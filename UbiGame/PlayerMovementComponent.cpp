@@ -34,11 +34,11 @@ void PlayerMovementComponent::Update()
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        displacement.y -= inputAmount * dt;
+        displacement.y -= inputAmount * dt * 2;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        // displacement.y += inputAmount * dt;
+        displacement.y += inputAmount * dt;
         GetEntity()->SetSize(sf::Vector2f(128.0f, 64.0f));
     }
     else GetEntity()->SetSize(sf::Vector2f(128.0f, 128.0f));
@@ -47,14 +47,25 @@ void PlayerMovementComponent::Update()
         if ((position + displacement).x <= GetEntity()->GetSize().y / 2 ||
             (position + displacement).x > 1920 / 2 - GetEntity()->GetSize().y / 2 ||
             (position + displacement).y <= GetEntity()->GetSize().y / 2 ||
-            (position + displacement).y > 1080 - GetEntity()->GetSize().y / 2)
-            return;
+            (position + displacement).y > 1080 - GetEntity()->GetSize().y / 2) {
+                if (position.x > 1920 / 2 - GetEntity()->GetSize().y / 2) {
+                    sf::Vector2f fix{ 1920 / 2 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
+                    GetEntity()->SetPos(fix);
+                }
+                return;
+        }
     }
     else {
         if ((position + displacement).x > 1920 - GetEntity()->GetSize().y / 2 ||
             (position + displacement).x <= 1920 / 2 + GetEntity()->GetSize().y / 2 ||
             (position + displacement).y <= GetEntity()->GetSize().y / 2 ||
-            (position + displacement).y > 1080 - GetEntity()->GetSize().y / 2)return;
+            (position + displacement).y > 1080 - GetEntity()->GetSize().y / 2) {
+                if (position.x <= 1920 / 2 + GetEntity()->GetSize().y / 2) {
+                    sf::Vector2f fix{ 1920 / 2 + GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
+                    GetEntity()->SetPos(fix);
+                }
+                return;
+        }
     }
 
 
