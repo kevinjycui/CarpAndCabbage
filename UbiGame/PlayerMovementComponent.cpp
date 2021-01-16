@@ -81,6 +81,9 @@ void PlayerMovementComponent::Update()
 
     // Update the entity position locally
     GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
+
+    sf::Vector2f gravity{ 0.0f, 1.0f };
+    GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
     
     // Only send update to server when user has moved
     if (displacement.x != 0 || displacement.y != 0) {

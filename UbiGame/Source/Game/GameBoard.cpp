@@ -69,10 +69,10 @@ void GameBoard::CreatePlatform(){
 	platform->SetPos(sf::Vector2f(640.0f, 550.0f));
 	platform->SetSize(sf::Vector2f(175.0f, 50.0f));
 
-	GameEngine::RenderComponent* render = platform->AddComponent<GameEngine::RenderComponent>(); // <-- Capturing the new component
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(platform->AddComponent<GameEngine::SpriteRenderComponent>());
 
-	render->SetFillColor(sf::Color::Red); // <-- Change the fill color to Red
-	render->SetZLevel(2);
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::Bread);
 
 	platform->AddComponent<GameEngine::CollidableComponent>();
 	platform->AddComponent<PlatformComponent>();

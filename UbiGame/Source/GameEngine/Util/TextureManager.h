@@ -20,6 +20,8 @@ namespace GameEngine
 
 			Background,
 
+			Bread,
+
 			Count,
 		};
 	}	
@@ -31,6 +33,7 @@ namespace GameEngine
 		case eTexture::Lettuce: return "lettuce.png";
 		case eTexture::Knife: return "knife.png";
 		case eTexture::Background: return "bg.png";
+		case eTexture::Bread: return "bread.png";
 		}
 		return "UnknownTexType";
 	}
