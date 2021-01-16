@@ -12,6 +12,7 @@
 #include "GameEngine/Util/CollisionManager.h"
 
 #include <Game/GameBoard.h>
+#include "KnifeMovementComponent.h"
 
 using namespace GameEngine;
 using namespace Game;
@@ -127,8 +128,6 @@ void PlayerMovementComponent::Update()
             myBox.left <= collideBox.left + myBox.width &&
             myBox.left + myBox.width >= collideBox.left) {
 
-            std::cout << myBox.top << " " << myBox.height << " " << collideBox.top << " " << collideBox.height << "\n";
-
             velocity_y = 0.f;
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -139,6 +138,7 @@ void PlayerMovementComponent::Update()
 
     // Update the entity position locally
     sf::Vector2f gravity{ 0.0f, velocity_y };
+
     displacement += gravity;
 
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
