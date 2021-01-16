@@ -52,6 +52,12 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ 1920 / 2 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
+                if (position.x <= GetEntity()->GetSize().y / 2) {
+                    sf::Vector2f fix{ GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
+                    GetEntity()->SetPos(fix);
+                }
+                sf::Vector2f gravity{ 0.0f, 1.0f };
+                GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
                 return;
         }
     }
@@ -64,6 +70,12 @@ void PlayerMovementComponent::Update()
                     sf::Vector2f fix{ 1920 / 2 + GetEntity()->GetSize().y / 2 + 1, GetEntity()->GetPos().y };
                     GetEntity()->SetPos(fix);
                 }
+                if (position.x > 1920 - GetEntity()->GetSize().y / 2) {
+                    sf::Vector2f fix{ 1920 - GetEntity()->GetSize().y / 2, GetEntity()->GetPos().y };
+                    GetEntity()->SetPos(fix);
+                }
+                sf::Vector2f gravity{ 0.0f, 1.0f };
+                GetEntity()->SetPos(GetEntity()->GetPos() + gravity);
                 return;
         }
     }
