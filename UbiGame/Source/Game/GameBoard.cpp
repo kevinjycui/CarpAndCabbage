@@ -5,6 +5,8 @@
 #include "../../KnifeMovementComponent.h"
 #include "GameEngine/EntitySystem/Components/SpriteRenderComponent.h"
 #include <GameEngine/EntitySystem/Components/SoundComponent.h>
+#include "GameEngine/EntitySystem/Components/CollidableComponent.h"
+#include "GameEngine/EntitySystem/Components/CollidablePhysicsComponent.h"
 
 using namespace Game;
 
@@ -15,6 +17,7 @@ GameBoard::GameBoard() {
 	AddBackground();
 	CreatePlayer();
 	AddObstacles();
+	CreatePlatform();
 }
 
 void GameBoard::AddBackground()
@@ -55,7 +58,9 @@ void GameBoard::AddObstacles()
 	spriteRender->SetTexture(GameEngine::eTexture::Knife);
 
 	obstacles.push_back(knife);
+}
 
+void GameBoard::CreatePlatform(){
 	GameEngine::Entity* platform = new GameEngine::Entity();
 
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(platform);
@@ -67,6 +72,7 @@ void GameBoard::AddObstacles()
 
 	render->SetFillColor(sf::Color::Red); // <-- Change the fill color to Red
 
+	platform->AddComponent<GameEngine::CollidableComponent>();
 }
 
 void GameBoard::CreatePlayer()
@@ -97,6 +103,8 @@ void GameBoard::CreatePlayer()
 	m_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	n_player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 
+	m_player->AddComponent < GameEngine::CollidablePhysicsComponent>();
+	n_player->AddComponent < GameEngine::CollidablePhysicsComponent>();
 }
 
 GameBoard::~GameBoard()

@@ -25,6 +25,7 @@ namespace Game
 		void AddBackground();
 		GameEngine::Entity* bg; // <-- Added Member
 		void AddObstacles();
+		void CreatePlatform();
 		std::vector<GameEngine::Entity*> obstacles;
 	};
 }
