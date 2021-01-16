@@ -10,6 +10,8 @@
 
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
 #include "GameEngine/Util/CollisionManager.h"
+
+#include <Game/GameBoard.h>
 using namespace GameEngine;
 using namespace Game;
 using sio::socket;
@@ -22,7 +24,11 @@ void PlayerMovementComponent::Update()
 {
     __super::Update();
 
+<<<<<<< HEAD
     velocity_y += acceleration_y;
+=======
+    GameEngine::SpriteRenderComponent* playerSprite = GetEntity()->GetComponent<GameEngine::SpriteRenderComponent>();
+>>>>>>> 3846608bfe480262a2587b34fe63d1050ccb829e
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
@@ -35,10 +41,24 @@ void PlayerMovementComponent::Update()
     const float inputAmount = 300.0f;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        if (Socket::isFish && playerSprite) {
+            playerSprite->SetTexture(GameEngine::eTexture::Fish);
+        }
+        else {
+            playerSprite->SetTexture(GameEngine::eTexture::Lettuce);
+        }
+
         displacement.x -= inputAmount * dt;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (Socket::isFish) {
+            playerSprite->SetTexture(GameEngine::eTexture::FishRight);
+        }
+        else {
+            playerSprite->SetTexture(GameEngine::eTexture::LettuceRight);
+        }
+
         displacement.x += inputAmount * dt; 
     }
 
