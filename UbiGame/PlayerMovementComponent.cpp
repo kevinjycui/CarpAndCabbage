@@ -38,8 +38,10 @@ void PlayerMovementComponent::Update()
     }
     
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        displacement.y += inputAmount * dt;
+        // displacement.y += inputAmount * dt;
+        GetEntity()->SetSize(sf::Vector2f(128.0f, 64.0f));
     }
+    else GetEntity()->SetSize(sf::Vector2f(128.0f, 128.0f));
 
     if ((position + displacement).x <= GetEntity()->GetSize().y / 2 ||
         (position + displacement).x > 1920 / 2 - GetEntity()->GetSize().y / 2 ||
