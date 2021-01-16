@@ -45,6 +45,7 @@ namespace Game
 		void AddObstacles();
 		void CreatePlatform();
 		std::vector<GameEngine::Entity*> obstacles;
+		std::vector<GameEngine::Entity*> platforms;
 	};
 }
 

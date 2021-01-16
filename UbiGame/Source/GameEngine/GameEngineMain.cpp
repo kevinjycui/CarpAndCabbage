@@ -122,10 +122,10 @@ void GameEngineMain::Update()
 	RemovePendingEntities();
 
 	UpdateWindowEvents();
-	if (m_menu)
-		m_menu->Update();
 	if (m_gameBoard)
 		m_gameBoard->Update();
+	else if (m_menu)
+		m_menu->Update();
 
 	UpdateEntities();
 	RenderEntities();
