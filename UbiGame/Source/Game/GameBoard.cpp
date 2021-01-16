@@ -3,6 +3,7 @@
 #include "GameEngine/GameEngineMain.h"
 #include "../../PlayerMovementComponent.h"
 #include "../../KnifeMovementComponent.h"
+#include "../../PlatformComponent.h"
 #include "GameEngine/EntitySystem/Components/SpriteRenderComponent.h"
 #include <GameEngine/EntitySystem/Components/SoundComponent.h>
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
@@ -10,6 +11,7 @@
 #include "../Player.h"
 #include "../Socket.h"
 #include <string>
+#include "../../PawnPhysicsComponent.h"
 
 using namespace Game;
 
@@ -75,8 +77,10 @@ void GameBoard::CreatePlatform(){
 	GameEngine::RenderComponent* render = platform->AddComponent<GameEngine::RenderComponent>(); // <-- Capturing the new component
 
 	render->SetFillColor(sf::Color::Red); // <-- Change the fill color to Red
+	render->SetZLevel(2);
 
 	platform->AddComponent<GameEngine::CollidableComponent>();
+	platform->AddComponent<PlatformComponent>();
 }
 
 void GameBoard::CreateOpponent() {
@@ -94,6 +98,8 @@ void GameBoard::CreateOpponent() {
 
 	opponent->AddComponent<Game::PlayerMovementComponent>();
 	opponent->AddComponent<GameEngine::CollidablePhysicsComponent>();
+
+	// opponent->AddComponent<PawnPhysicsComponent>();
 
 	this->opponent = opponent;
 }
@@ -114,6 +120,7 @@ void GameBoard::CreatePlayer() {
 
 	player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	player->AddComponent<GameEngine::CollidablePhysicsComponent>();
+	// player->AddComponent<PawnPhysicsComponent>();
 
 	this->player = player;
 }
