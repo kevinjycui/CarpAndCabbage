@@ -5,9 +5,13 @@ const io = require('socket.io')(http);
 io.on('connection', (socket) => {
 	console.log(`connection by socket ${socket.id}`);
 
+	// The socket's room ID
+	let socketRoomId;
+
 	socket.on('joinRoom', (roomId) => {
 		console.log(`${socket.id} has joined ${roomId}`);
 		socket.join(roomId);
+		socketRoomId = roomId;
 
 		// If only one person in the room
 		if (io.sockets.adapter.rooms[roomId].length <= 1) {
@@ -25,11 +29,13 @@ io.on('connection', (socket) => {
 		}
 	});
 
-	// This is sent by clients to update something/send an event to the other
-	// player's game
-	socket.on('update', (payload) => {
-		console.log(`${socket.id} sends out update: ${payload}`)
-		socket.broadcast.to(payload.roomId).emit(payload);
+	socket.on('movePlayer', (payload) => {
+		console.log(`${socket.id} sends out update move player: ${payload}`)
+		socket.broadcast.to(socketRoomId).emit('movePlayer', {
+			x: payload.x,
+			y: payload.y,
+			player: socket.id
+		});
 	});
 
 	// Cleaning up when a socket disconencts
