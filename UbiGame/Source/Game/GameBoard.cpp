@@ -8,6 +8,7 @@
 #include <GameEngine/EntitySystem/Components/SoundComponent.h>
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
 #include "GameEngine/EntitySystem/Components/CollidablePhysicsComponent.h"
+#include "../../PawnPhysicsComponent.h"
 
 using namespace Game;
 
@@ -108,6 +109,9 @@ void GameBoard::CreatePlayer()
 
 	m_player->AddComponent < GameEngine::CollidablePhysicsComponent>();
 	n_player->AddComponent < GameEngine::CollidablePhysicsComponent>();
+
+	//m_player->AddComponent < PawnPhysicsComponent>();
+	//n_player->AddComponent < PawnPhysicsComponent>();
 }
 
 GameBoard::~GameBoard()
