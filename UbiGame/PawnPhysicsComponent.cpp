@@ -13,6 +13,7 @@ void PawnPhysicsComponent::Update()
 
 	if (dt > 0.f) {
 		m_velocity.x = m_wantedVelocity.x;
+		m_velocity.y += m_wantedVelocity.y;
 
 		m_velocity.y += gForce * dt;
 
