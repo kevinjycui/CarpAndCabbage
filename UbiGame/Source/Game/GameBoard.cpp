@@ -183,7 +183,6 @@ void GameBoard::CreateOpponent() {
 	opponent->SetSize(sf::Vector2f(128.0f, 128.0f));
 
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(opponent->AddComponent<GameEngine::SpriteRenderComponent>());
-
 	spriteRender->SetFillColor(sf::Color::Transparent);
 
 	if (Socket::isFish) {
@@ -216,7 +215,6 @@ void GameBoard::CreatePlayer() {
 	player->SetSize(sf::Vector2f(128.0f, 128.0f));
 
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(player->AddComponent<GameEngine::SpriteRenderComponent>());
-
 	spriteRender->SetFillColor(sf::Color::Transparent);
 
 	if (Socket::isFish) {
