@@ -1,15 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\SFML-2.5.0",
-    "\\SFML-2.5.0\\examples",
     "\\SFML-2.5.0\\examples\\sockets",
     "\\UbiGame",
     "\\UbiGame\\Resources",
+    "\\UbiGame\\Source",
     "\\UbiGame\\Source\\Game",
     "\\UbiGame\\Source\\GameEngine",
-    "\\UbiGame\\Source\\GameEngine\\EntitySystem"
+    "\\UbiGame\\Source\\GameEngine\\EntitySystem",
+    "\\UbiGame\\Source\\GameEngine\\EntitySystem\\Components",
+    "\\UbiGame\\Source\\GameEngine\\Util"
   ],
-  "SelectedNode": "\\SFML-2.5.0\\examples\\pong",
+  "SelectedNode": "\\UbiGame\\Source\\Game\\GameBoard.cpp",
   "PreviewInSolutionExplorer": false
 }
