@@ -21,6 +21,11 @@ namespace Game
 	private:
 		void CreatePlayer();          // <-- Added Function
 		GameEngine::Entity* m_player; // <-- Added Member
+		GameEngine::Entity* n_player; // <-- Added Member
+		void AddBackground();
+		GameEngine::Entity* bg; // <-- Added Member
+		void AddObstacles();
+		std::vector<GameEngine::Entity*> obstacles;
 	};
 }
 
