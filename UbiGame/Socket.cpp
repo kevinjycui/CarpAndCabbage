@@ -4,3 +4,4 @@
 sio::client Socket::io;
 std::string Socket::playerId;
 std::string Socket::opponentId;
+bool Socket::isFish;

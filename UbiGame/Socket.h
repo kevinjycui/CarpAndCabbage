@@ -9,6 +9,7 @@ public:
 	static sio::client io;
 	static std::string playerId;
 	static std::string opponentId;
+	static bool isFish;
 };
 
 #endif
