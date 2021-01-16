@@ -5,7 +5,7 @@
 using namespace Game;
 
 PlatformComponent::PlatformComponent()
-	:m_lifeTime(1.f)
+	:m_lifeTime(100.f)
 {
 
 }
