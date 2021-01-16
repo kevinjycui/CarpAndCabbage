@@ -4,8 +4,12 @@
 #include "GameEngine/GameEngineMain.h" //<-- Add this include to retrieve the delta time between frames
 #include "../Socket.h"
 #include <ctime>
+#include <SFML/Graphics/Rect.hpp>
+
 
 using namespace Game;
+
+typedef sf::Rect<float> AABBRect;
 
 void ChiliPepperMovementComponent::Update()
 {
@@ -26,6 +30,18 @@ void ChiliPepperMovementComponent::Update()
     //Update the entity position
     GetEntity()->SetPos(GetEntity()->GetPos() + displacement);
 
+    auto playerPosition = GameEngine::GameEngineMain::GetInstance()->m_gameBoard->player->GetPos();
+    auto playerSize = GameEngine::GameEngineMain::GetInstance()->m_gameBoard->player->GetSize();
+
+    auto chiliPosition = GetEntity()->GetPos();
+    auto chiliSize = GetEntity()->GetSize();
+
+    AABBRect playerRect = AABBRect(playerPosition, playerSize);
+    AABBRect chiliRect = AABBRect(chiliPosition, chiliSize);
+
+    if (playerRect.intersects(chiliRect)) {
+        Socket::isGameOver = true;
+    }
 }
 
 void ChiliPepperMovementComponent::OnAddToWorld() {

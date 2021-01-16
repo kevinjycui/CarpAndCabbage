@@ -55,7 +55,7 @@ GameBoard::GameBoard() {
 		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
 
 		chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
-		chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::Knife);
+		chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
 
 		obstacles.push_back(chiliPepper);
 	}));

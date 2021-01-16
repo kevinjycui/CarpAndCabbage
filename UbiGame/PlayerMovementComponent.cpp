@@ -12,6 +12,7 @@
 #include "GameEngine/Util/CollisionManager.h"
 
 #include <Game/GameBoard.h>
+
 using namespace GameEngine;
 using namespace Game;
 using sio::socket;
