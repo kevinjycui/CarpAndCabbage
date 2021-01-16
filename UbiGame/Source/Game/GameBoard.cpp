@@ -198,7 +198,6 @@ void GameBoard::AddObstacles()
 }
 
 void GameBoard::CreatePlatform(){
-
 	const int num = 5;
 	
 	float x_coords[num]{ 320.f, 640.f, 960.f, 1280.f, 1600.f  };
