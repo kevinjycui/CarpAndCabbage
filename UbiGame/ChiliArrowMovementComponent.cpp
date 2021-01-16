@@ -58,7 +58,7 @@ void ChiliArrowMovementComponent::Update()
     GetEntity()->SetPos(newPos);
 
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
         // 5 second cooldown
         if (difftime(std::time(nullptr), lastActivated) <= 5) {
             return;

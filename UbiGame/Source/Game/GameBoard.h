@@ -4,6 +4,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <vector>
 #include "../Player.h"
+#include "../Socket.h"
 
 namespace Game
 {
@@ -32,10 +33,9 @@ namespace Game
 		virtual ~GameBoard();
 
 		void Update();		
-		bool IsGameOver() { return false; }
+		bool IsGameOver() { return Socket::isGameOver; }
 
-	private:
-		void CreatePlayer();          // <-- Added Function
+		void CreatePlayer();   // <-- Added Function
 		void CreateOpponent();
 		Player* player; // <-- Added Member
 		Player* opponent; // <-- Added Member
@@ -44,8 +44,12 @@ namespace Game
 		GameEngine::Entity* bg; // <-- Added Member
 		void AddObstacles();
 		void CreatePlatform();
+		void CreatePepper();
 		std::vector<GameEngine::Entity*> obstacles;
-		std::vector<GameEngine::Entity*> platforms;
+		std::vector<GameEngine::Entity*> fishPlatforms;
+		std::vector<GameEngine::Entity*> cabbagePlatforms;
+		void CreateCuts();
+		GameEngine::Entity* cut;
 	};
 }
 

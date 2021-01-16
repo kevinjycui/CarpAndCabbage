@@ -10,6 +10,7 @@ public:
 	static std::string playerId;
 	static std::string opponentId;
 	static bool isFish;
+	static bool isGameOver;
 };
 
 #endif

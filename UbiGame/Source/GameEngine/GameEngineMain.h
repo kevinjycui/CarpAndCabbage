@@ -31,7 +31,7 @@ namespace GameEngine
 		void OnInitialised();
 		void StartGame(bool isFish);
 		bool IsGameOver() const { return m_gameBoard && m_gameBoard->IsGameOver(); }
-		sio::client h;
+		Game::GameBoard* m_gameBoard;
 
 	private:
 		GameEngineMain();
@@ -59,7 +59,7 @@ namespace GameEngine
 		sf::RenderWindow*   m_renderWindow; //In future they will be different						
 
 		Game::Menu*			m_menu;
-		Game::GameBoard*    m_gameBoard;
+
 		float				m_lastDT;
 
 		bool m_windowInitialised;
