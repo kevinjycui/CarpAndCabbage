@@ -415,6 +415,7 @@ void GameBoard::Update()
 	else
 		opponentPlatforms = &fishPlatforms;
 
+<<<<<<< HEAD
 	if (cutMade) {
 		time_cut += GameEngine::GameEngineMain::GetTimeDelta();
 		if (time_cut > 5.f) {
@@ -446,13 +447,25 @@ void GameBoard::Update()
 			currPlatform--;
 			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 			//move selector to next platform
+=======
+	//create global variable for how many platforms there are and give each one an index, top = 0
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (!pressed) {
+			pressed = true;
+			if (currPlatform > 0) {
+				currPlatform--;
+				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
+				//move selector to next platform
+			}
+>>>>>>> 035af41b1102275106d9bc861eb6cef9c50e0a88
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !pressed) {
-		pressed = true;
-		if (currPlatform < fishPlatforms.size() - 1) {
-			currPlatform++;
-			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
+	else if (!pressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		if (!pressed) {
+			pressed = true;
+			if (currPlatform < fishPlatforms.size() - 1) {
+				currPlatform++;
+				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 
 			}
 		}
