@@ -33,6 +33,9 @@ void ChiliArrowMovementComponent::Update()
 
     time_passed += dt;
 
+    if (time_passed >= 5.f)
+        GetEntity()->SetPos(sf::Vector2f{ GetEntity()->GetPos().x, 50.f });
+
     //By default the displacement is 0,0
     sf::Vector2f displacement{ 0.0f,0.0f };
     sf::Vector2f position = GetEntity()->GetPos();
@@ -77,6 +80,8 @@ void ChiliArrowMovementComponent::Update()
 
         Socket::io.socket()->emit("chiliAttack", j.dump());
         GameEngineMain::GetInstance()->m_gameBoard->SpawnPepper(GetEntity()->GetPos());
+
+        GetEntity()->SetPos(GetEntity()->GetPos() + sf::Vector2f{ 0.f, 1080.f });
     }
 }
 

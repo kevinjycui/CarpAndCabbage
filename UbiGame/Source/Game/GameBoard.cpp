@@ -374,10 +374,10 @@ void GameBoard::AddBackground()
 
 void GameBoard::AddObstacles()
 {	
-	const int num = 2;
+	const int num = 3;
 
-	float x_coords[num]{ 640.f, 1280.f };
-	float y_coords[num]{ 500.f, 800.f };
+	float x_coords[num]{ 640.f, 1280.f, 960.f };
+	float y_coords[num]{ 580.f, 900.f, 200.f };
 
 	for (int i = 0; i < num; i++) {
 
@@ -402,8 +402,8 @@ void GameBoard::AddObstacles()
 
 }
 
-std::vector<sf::Vector2f> fishPlatformCoords = { sf::Vector2f(320.f, 380.f) , sf::Vector2f(640.f, 550.f), sf::Vector2f(320.f, 720.f) };
-std::vector<sf::Vector2f> cabbagePlatformCoords = { sf::Vector2f(1600.f, 380.f), sf::Vector2f(1280.f, 550.f), sf::Vector2f(1600.f, 720.f)};
+std::vector<sf::Vector2f> fishPlatformCoords = { sf::Vector2f(640.f, 290.f) , sf::Vector2f(320.f, 480.f) , sf::Vector2f(640.f, 650.f), sf::Vector2f(320.f, 820.f) };
+std::vector<sf::Vector2f> cabbagePlatformCoords = { sf::Vector2f(1280.f, 290.f) , sf::Vector2f(1600.f, 480.f), sf::Vector2f(1280.f, 650.f), sf::Vector2f(1600.f, 820.f)};
 
 
 void GameBoard::CreatePlatform(){
