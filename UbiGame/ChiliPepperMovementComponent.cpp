@@ -12,6 +12,7 @@
 #include <GameEngine/Util/CollisionManager.h>
 
 #include <GameEngine/EntitySystem/Components/SpriteRenderComponent.h>
+#include <GameEngine/EntitySystem/Components/ParticleEmitterComponent.h>
 
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
 #include "GameEngine/Util/CollisionManager.h"
@@ -99,7 +100,6 @@ void ChiliPepperMovementComponent::OnAddToWorld() {
 }
 
 ChiliPepperMovementComponent::ChiliPepperMovementComponent() {
-
 }
 
 ChiliPepperMovementComponent::~ChiliPepperMovementComponent() {}

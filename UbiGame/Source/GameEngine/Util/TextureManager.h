@@ -36,6 +36,8 @@ namespace GameEngine
 
 			GameEnd,
 
+			Particles,
+
 			Count,
 
 		};
@@ -56,6 +58,7 @@ namespace GameEngine
 		case eTexture::ChiliPepper: return "pepper.png";
 		case eTexture::DottedLine: return "dotted_line.png";
 		case eTexture::GameEnd: return "gameover.png";
+		case eTexture::Particles: return "particle.png";
 		}
 		return "UnknownTexType";
 	}
