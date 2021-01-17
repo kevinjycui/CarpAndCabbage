@@ -222,6 +222,17 @@ void Menu::AddButton() {
 
 	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
 	soundCompon->PlaySound(soundId, true);
+
+	GameEngine::Entity* instr = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(instr);
+	instr->SetPos(sf::Vector2f(1920.0f * 4/5, 1080.0f * 2/3));
+	instr->SetSize(sf::Vector2f(400.0f, 325.0f));
+
+	GameEngine::SpriteRenderComponent* instrSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(instr->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	instrSpriteRender->SetFillColor(sf::Color::Transparent);
+	instrSpriteRender->SetTexture(GameEngine::eTexture::MenuInstr);
 }
 
 void Menu::AddTextbox() {
