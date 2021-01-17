@@ -14,6 +14,8 @@ public:
 	static bool firstInRoom;
 	static bool isFullRoom;
 	static bool isWaitingOnOtherPlayer;
+	static bool isFishDead;
+	static bool isCabbageDead;
 };
 
 #endif
