@@ -17,23 +17,36 @@ namespace Game
 		Menu();
 		virtual ~Menu();
 		void Update();
-
 	private:
 		void AddMenuBackground();
 		GameEngine::Entity* bg;
 		void AddButton();
 		GameEngine::Entity* btn;
 		void AddTextbox();
+
 	};
 
+	class GameOver
+	{
+	public:
+		GameOver();
+		virtual ~GameOver();
+		void Update();
+	private:
+		//void AddMenuBackground();
+		//GameEngine::Entity* bg;
+		//void AddButton();
+		//GameEngine::Entity* btn;
+		//void AddTextbox();
+	};
 	class GameBoard
 	{
 	public:
 		GameBoard();
 		virtual ~GameBoard();
 
-		void Update();		
-		bool IsGameOver() { return Socket::isGameOver; }
+		void Update();
+		{ return Socket::isGameOver; }
 
 		void CreatePlayer();   // <-- Added Function
 		void CreateOpponent();
