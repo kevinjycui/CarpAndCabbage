@@ -150,4 +150,10 @@
     <ClInclude Include="ChiliPepperMovementComponent.h" />
     <ClInclude Include="BrokenPlatformComponent.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\Windows\Fonts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\..\..\Downloads\arial.ttf" />
+  </ItemGroup>
 </Project>
