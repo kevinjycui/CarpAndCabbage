@@ -497,6 +497,8 @@ void GameBoard::BreakOpponentPlatform(sf::Vector2f pos) {
 	BreakPlatform(opponentPlatforms, platformIndex);
 }
 
+bool deadGameOver = false;
+
 void GameBoard::Update()
 {
 	std::vector<GameEngine::Entity*>* opponentPlatforms;
@@ -577,7 +579,8 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
 
-	if (Socket::isFishDead == true || Socket::isCabbageDead == true) {
+	if ((Socket::isFishDead == true || Socket::isCabbageDead == true) && deadGameOver == false) {
+		deadGameOver = true;
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
 
@@ -613,4 +616,6 @@ void GameOver::AddGOBackground(){
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
+
+	printf("alsdkfjoqiwejr98q4j98qjrwefoidjsadlkjf");
 }
