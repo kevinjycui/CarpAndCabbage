@@ -554,6 +554,7 @@ void GameBoard::Update()
 	}
 	if (Socket::isFishDead == true || Socket::isCabbageDead == true) {
 		printf("ASDFQWERKSDJFGO@!$%U!*#$TUKIDJSGFOIQREJTT");
+		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
 
 }
