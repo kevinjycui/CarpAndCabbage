@@ -6,3 +6,5 @@ std::string Socket::playerId;
 std::string Socket::opponentId;
 bool Socket::isFish;
 bool Socket::isGameOver;
+bool Socket::isFullRoom;
+bool Socket::firstInRoom;

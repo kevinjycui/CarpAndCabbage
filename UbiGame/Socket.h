@@ -11,6 +11,8 @@ public:
 	static std::string opponentId;
 	static bool isFish;
 	static bool isGameOver;
+	static bool firstInRoom;
+	static bool isFullRoom;
 };
 
 #endif

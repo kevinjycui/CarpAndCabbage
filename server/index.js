@@ -7,8 +7,10 @@ io.on('connection', (socket) => {
 
 	// The socket's room ID
 	let socketRoomId;
-	let playerId = socket.id;
-	let opponentId;
+
+	socket.on('getPlayerId', (ack) => {
+		ack(socket.id);
+	});
 
 	socket.on('joinRoom', (roomId, ack) => {
 		console.log(`${socket.id} has joined ${roomId}`);
@@ -28,9 +30,13 @@ io.on('connection', (socket) => {
 		// Otherwise, have the player join the room and emit the event
 		else {
 			socket.broadcast.to(roomId).emit('newPlayer', socket.id);
+			const otherPlayerId = Object.keys(io.sockets.adapter.rooms[roomId].sockets).find((socketId) =>
+				socketId !== socket.id
+			)
+			return ack(otherPlayerId);
 		}
-
-		ack(socket.id);
+		// Empty string means don't start game
+		return ack('');
 	});
 
 	socket.on('movePlayer', (payloadJSON) => {

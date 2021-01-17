@@ -1,6 +1,6 @@
 #pragma once
 #include "GameEngine/EntitySystem/Entity.h"
-
+#include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
 #include <SFML/System/Vector2.hpp>
 #include <vector>
 #include "../Player.h"
@@ -24,6 +24,7 @@ namespace Game
 		void AddButton();
 		GameEngine::Entity* btn;
 		void AddTextbox();
+		GameEngine::TextRenderComponent* textbox;
 	};
 
 	class GameBoard
