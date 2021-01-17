@@ -40,6 +40,8 @@ namespace GameEngine
 
 			Particles,
 
+			MenuInstr,
+
 			Count,
 
 		};
@@ -62,6 +64,7 @@ namespace GameEngine
 		case eTexture::Particles: return "particle.png";
 		case eTexture::FishWins: return "carp_wins.png";
 		case eTexture::LettuceWins: return "cabbage_wins.png";
+		case eTexture::MenuInstr: return "menu_instructions.png";
 		}
 		return "UnknownTexType";
 	}
