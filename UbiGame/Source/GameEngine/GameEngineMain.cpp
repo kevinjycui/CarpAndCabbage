@@ -69,6 +69,22 @@ void GameEngineMain::EndGame()
 	sm_gameClock.restart();
 }
 
+void GameEngineMain::Restart()
+{
+	m_menu = new Game::Menu();
+	sm_deltaTimeClock.restart();
+	sm_gameClock.restart();
+	Socket::playerId = "";
+	Socket::opponentId = "";
+	Socket::isFish = false;
+	Socket::isGameOver = false;
+	Socket::isFullRoom = false;
+	Socket::firstInRoom = false;
+	Socket::isWaitingOnOtherPlayer = false;
+	Socket::isFishDead = false;
+	Socket::isCabbageDead = false;
+}
+
 void GameEngineMain::CreateAndSetUpWindow()
 {
 	m_renderWindow = new sf::RenderWindow(sf::VideoMode((unsigned int)WINDOW_WIDTH, (unsigned int)WINDOW_HEIGHT), "Carp and Cabbage");
