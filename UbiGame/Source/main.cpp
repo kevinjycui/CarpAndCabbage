@@ -6,7 +6,8 @@
 int main()
 {
 	// Connect to Socket.IO server
-	Socket::io.connect("http://127.0.0.1:3000");
+	Socket::io.connect("ws://carp-and-cabbage-server.herokuapp.com/");
+
 	Socket::io.socket()->emit("getPlayerId", {}, [&](sio::message::list const& msg) {
 		std::string player_id = msg.at(0)->get_string();
 		Socket::playerId = player_id;
