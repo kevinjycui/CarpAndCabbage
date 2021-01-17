@@ -18,6 +18,7 @@ namespace Game
 
         float lastAnimation;
         int m_currentFaceIndex;
+        bool dead;
 
         std::chrono::steady_clock::time_point lastServerPositionUpdate;
     };

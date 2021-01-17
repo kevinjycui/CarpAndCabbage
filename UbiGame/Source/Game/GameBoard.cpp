@@ -514,10 +514,12 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
-	else
-		pressed = false;
-
-	if (Socket::isGameOver) {
+	else {
+		down_pressed = false;
+		up_pressed = false;
+	}
+	if (Socket::isFishDead == true||Socket::isCabbageDead == true) {
+		printf("ASDFQWERKSDJFGO@!$%U!*#$TUKIDJSGFOIQREJTT");
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
 }
@@ -529,7 +531,7 @@ void GameBoard::CreateCuts() {
 	cut->SetPos(sf::Vector2f(1960.f, 2000.f));
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
 	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
+	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
 }
 
 GameOver::GameOver() {

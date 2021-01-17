@@ -9,3 +9,5 @@ bool Socket::isGameOver = false;
 bool Socket::isFullRoom = false;
 bool Socket::firstInRoom = false;
 bool Socket::isWaitingOnOtherPlayer = false;
+bool Socket::isFishDead = false;
+bool Socket::isCabbageDead = false;
