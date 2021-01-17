@@ -30,7 +30,6 @@ using namespace Game;
 
 static GameEngine::SoundComponent* soundCompon;
 static int soundId;
-bool sound = 1;
 
 int currPlatform = 1;
 GameEngine::Entity* brokenFish = new GameEngine::Entity();
@@ -282,12 +281,6 @@ void Menu::Update() {
 				}
 			});
 		}
-	}
-
-	//mute the game
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		sound != sound;
-		soundCompon->PlaySound(soundId, sound);
 	}
 }
 
@@ -601,6 +594,14 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
 
+	//mute the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		soundCompon->PlaySound(soundId, false);
+	}
+	//unmute the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
+		soundCompon->PlaySound(soundId, false);
+	}
 }
 
 void GameBoard::CreateCuts() {
