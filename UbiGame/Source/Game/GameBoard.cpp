@@ -401,8 +401,11 @@ GameBoard::~GameBoard()
 
 int currPlatform = 0;
 GameEngine::Entity* cut;
+sf::Vector2f newPos{ 0.f, 0.f };
 bool cutMade = false;
 bool pressed = false;
+
+float time_cut = 0.f;
 
 void GameBoard::Update()
 {	
@@ -411,6 +414,30 @@ void GameBoard::Update()
 		opponentPlatforms = &cabbagePlatforms;
 	else
 		opponentPlatforms = &fishPlatforms;
+
+	if (cutMade) {
+		time_cut += GameEngine::GameEngineMain::GetTimeDelta();
+		if (time_cut > 5.f) {
+			GameEngine::Entity* newPlatform = new GameEngine::Entity();
+
+			newPlatform->SetPos(newPos);
+			newPlatform->SetSize(sf::Vector2f(175.0f, 50.0f));
+
+			GameEngine::SpriteRenderComponent* newSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(newPlatform->AddComponent<GameEngine::SpriteRenderComponent>());
+
+			newSpriteRender->SetFillColor(sf::Color::Transparent);
+			newSpriteRender->SetTexture(GameEngine::eTexture::Bread);
+
+			newPlatform->AddComponent<GameEngine::CollidableComponent>();
+			newPlatform->AddComponent<PlatformComponent>();
+
+			GameEngine::GameEngineMain::GetInstance()->AddEntity(newPlatform);
+
+			opponentPlatforms->push_back(newPlatform);
+
+			cutMade = false;
+		}
+	}
 
 		//create global variable for how many platforms there are and give each one an index, top = 0
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !pressed) {
@@ -436,6 +463,8 @@ void GameBoard::Update()
 		pressed = false;
 
 		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
+
+		newPos = platform->GetPos();
 
 		cabbagePlatforms.erase(cabbagePlatforms.begin() + currPlatform);
 		currPlatform = 0;
