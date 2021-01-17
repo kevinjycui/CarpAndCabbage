@@ -3,6 +3,8 @@
 #include "GameEngine/EntitySystem/Component.h"
 #include <string>
 
+#include <chrono>
+
 namespace Game
 {
     class PlayerMovementComponent : public GameEngine::Component
@@ -16,5 +18,7 @@ namespace Game
 
         float lastAnimation;
         int m_currentFaceIndex;
+
+        std::chrono::steady_clock::time_point lastServerPositionUpdate;
     };
 };

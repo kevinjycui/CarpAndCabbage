@@ -14,6 +14,9 @@
 #include <Game/GameBoard.h>
 #include "KnifeMovementComponent.h"
 
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
+
 using namespace GameEngine;
 using namespace Game;
 using sio::socket;
@@ -162,10 +165,16 @@ void PlayerMovementComponent::Update()
 
     // Only send update to server when user has moved
     if (GetEntity()->GetPos() != position) {
-        nlohmann::json j;
-        j["x"] = GetEntity()->GetPos().x;
-        j["y"] = GetEntity()->GetPos().y;
-        Socket::io.socket()->emit("movePlayer", j.dump());
+        auto now = Clock::now();
+        // Throttling update (1 req/10ms)
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastServerPositionUpdate).count() >= 10) {
+            lastServerPositionUpdate = now;
+
+            nlohmann::json j;
+            j["x"] = GetEntity()->GetPos().x;
+            j["y"] = GetEntity()->GetPos().y;
+            Socket::io.socket()->emit("movePlayer", j.dump());
+        }
     }
 }
 
