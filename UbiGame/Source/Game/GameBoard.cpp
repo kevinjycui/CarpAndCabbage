@@ -557,7 +557,7 @@ void GameBoard::Update()
 		Socket::io.socket()->emit("breakPlatform", j.dump());
 	}
 
-	if (Socket::isFishDead == true || Socket::isCabbageDead == true) {
+	if (Socket::isFishDead || Socket::isCabbageDead) {
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
 
@@ -582,6 +582,7 @@ GameOver::~GameOver() {
 }
 
 void GameOver::AddGOBackground(){
+
 	bg = new GameEngine::Entity();
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
 
@@ -592,5 +593,21 @@ void GameOver::AddGOBackground(){
 		(bg->AddComponent<GameEngine::SpriteRenderComponent>());
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
+	spriteRender->SetTexture(GameEngine::eTexture::Background);
+
+	GameEngine::Entity* endScreen = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(endScreen);
+
+	endScreen->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+	endScreen->SetSize(sf::Vector2f(800.0f, 450.0f));
+
+	GameEngine::SpriteRenderComponent* textSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(endScreen->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	textSpriteRender->SetFillColor(sf::Color::Transparent);
+	if (Socket::isFishDead)
+		textSpriteRender->SetTexture(GameEngine::eTexture::LettuceWins);
+	else if (Socket::isCabbageDead)
+		textSpriteRender->SetTexture(GameEngine::eTexture::FishWins);
+
 }

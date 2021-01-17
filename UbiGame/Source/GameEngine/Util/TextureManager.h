@@ -34,7 +34,9 @@ namespace GameEngine
 
 			ChiliPepper,
 
-			GameEnd,
+			FishWins,
+
+			LettuceWins,
 
 			Count,
 
@@ -55,7 +57,8 @@ namespace GameEngine
 		case eTexture::Title: return "title.png";
 		case eTexture::ChiliPepper: return "pepper.png";
 		case eTexture::DottedLine: return "dotted_line.png";
-		case eTexture::GameEnd: return "gameover.png";
+		case eTexture::FishWins: return "carp_wins.png";
+		case eTexture::LettuceWins: return "cabbage_wins.png";
 		}
 		return "UnknownTexType";
 	}
