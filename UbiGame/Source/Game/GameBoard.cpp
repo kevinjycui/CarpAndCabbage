@@ -29,6 +29,31 @@ using namespace Game;
 static GameEngine::SoundComponent* soundCompon;
 static int soundId;
 
+void GameBoard::SpawnPepper(float x, std::string activatedById) {
+	std::cout << "pog\n";
+
+	// Creating the chili pepper
+	GameEngine::Entity* chiliPepper = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliPepper);
+
+	if (activatedById == Socket::playerId) {
+		chiliPepper->SetPos(sf::Vector2f(960.0f + x, 25.0f));
+	}
+	else {
+		chiliPepper->SetPos(sf::Vector2f(0.0f + x, 25.0f));
+	}
+
+	chiliPepper->SetSize(sf::Vector2f(50.0f, 50.0f));
+	chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
+
+	GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
+	chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
+
+	obstacles.push_back(chiliPepper);
+}
+
 GameBoard::GameBoard() {
 	AddBackground();
 	CreatePlayer();
@@ -39,27 +64,7 @@ GameBoard::GameBoard() {
 		auto payload = nlohmann::json::parse(data->get_string());
 		float x = payload["x"];
 		std::string activatedById = payload["activatedById"];
-
-		// Creating the chili pepper
-		GameEngine::Entity* chiliPepper = new GameEngine::Entity();
-		GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliPepper);
-
-		if (activatedById == Socket::playerId) {
-			chiliPepper->SetPos(sf::Vector2f(960.0f + x, 25.0f));
-		}
-		else {
-			chiliPepper->SetPos(sf::Vector2f(0.0f + x, 25.0f));
-		}
-
-		chiliPepper->SetSize(sf::Vector2f(50.0f, 50.0f));
-		chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
-
-		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
-
-		chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
-		chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
-
-		obstacles.push_back(chiliPepper);
+		SpawnPepper(x, activatedById);
 	}));
 
 	CreatePlatform();

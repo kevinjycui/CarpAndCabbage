@@ -68,9 +68,13 @@ void ChiliArrowMovementComponent::Update()
             std::cout << "pog\n";
 
             nlohmann::json j;
-            j["x"] = GetEntity()->GetPos().x;
-            j["activatedById"] = Socket::playerId;
+            float x = GetEntity()->GetPos().x;
+            std::string activatedById = Socket::playerId;
+            j["x"] = x;
+            j["activatedById"] = activatedById;
+
             Socket::io.socket()->emit("chiliAttack", j.dump());
+            GameEngineMain::GetInstance()->m_gameBoard->SpawnPepper(x, activatedById);
         }
     }
 }

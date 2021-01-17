@@ -62,6 +62,7 @@ namespace Game
 		void AddObstacles();
 		void CreatePlatform();
 		void CreatePepper();
+		void SpawnPepper(float x, std::string activatedById);
 		std::vector<GameEngine::Entity*> obstacles;
 		std::vector<GameEngine::Entity*> fishPlatforms;
 		std::vector<GameEngine::Entity*> cabbagePlatforms;
