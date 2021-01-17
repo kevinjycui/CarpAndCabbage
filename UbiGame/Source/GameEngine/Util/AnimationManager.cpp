@@ -31,6 +31,8 @@ void AnimationManager::InitStaticGameAnimations()
 	3)
 	);
 	*/
+	m_animDefinitions.push_back(SAnimationDefinition(EAnimationId::Smoke, eTexture::Particles, sf::Vector2i(0, 0), 10, 10));
+
 }
 
 
