@@ -29,8 +29,11 @@ using sio::message;
 using namespace Game;
 
 static GameEngine::SoundComponent* soundCompon;
+static GameEngine::SoundComponent* playerSoundCompon;
+
 static int soundId;
 static int blankSoundId;
+static int sliceSoundId;
 
 int currPlatform = 1;
 GameEngine::Entity* brokenFish = new GameEngine::Entity();
@@ -75,6 +78,9 @@ GameBoard::GameBoard() {
 	}));
 
 	Socket::io.socket()->on("breakPlatform", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		
+		playerSoundCompon->PlaySound(sliceSoundId, true);
+
 		auto payload = nlohmann::json::parse(data->get_string());
 		float x = payload["x"];
 		float y = payload["y"];
@@ -228,6 +234,7 @@ void Menu::AddButton() {
 
 	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
 	blankSoundId = soundCompon->LoadSoundFromFile("Resources/audio/blank.wav");
+	sliceSoundId = soundCompon->LoadSoundFromFile("Resources/audio/slice.wav");
 
 	soundCompon->PlaySound(soundId, true);
 
@@ -517,6 +524,9 @@ void GameBoard::CreatePlayer() {
 		spriteRender->SetTexture(GameEngine::eTexture::Lettuce);
 	}
 
+	playerSoundCompon = static_cast<GameEngine::SoundComponent*>
+		(player->AddComponent<GameEngine::SoundComponent>());
+
 	player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	player->AddComponent<GameEngine::CollidablePhysicsComponent>();
 	// player->AddComponent<PawnPhysicsComponent>();
@@ -606,6 +616,9 @@ void GameBoard::Update()
 
 	//move selector to previous platform
 	if (!cutMade && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
+		playerSoundCompon->PlaySound(sliceSoundId, true);
+
 		cutMade = true;
 
 		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
