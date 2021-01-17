@@ -33,6 +33,16 @@ void PlayerMovementComponent::Update()
 {
     __super::Update();
 
+    if (GetEntity()->GetPos().y >= 1920) {
+        Socket::io.socket()->emit("playerDied");
+        if (Socket::isFish) {
+            Socket::isFishDead = true;
+        }
+        else if (!Socket::isFish) {
+            Socket::isCabbageDead = true;
+        }
+    }
+
     velocity_y += acceleration_y;
 
     GameEngine::SpriteRenderComponent* playerSprite = GetEntity()->GetComponent<GameEngine::SpriteRenderComponent>();
