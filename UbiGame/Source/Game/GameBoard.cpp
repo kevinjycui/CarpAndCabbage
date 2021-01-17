@@ -29,6 +29,10 @@ using namespace Game;
 static GameEngine::SoundComponent* soundCompon;
 static int soundId;
 
+int currPlatform = 1;
+GameEngine::Entity* brokenFish = new GameEngine::Entity();
+GameEngine::Entity* brokenCabbage = new GameEngine::Entity();
+
 void GameBoard::SpawnPepper(sf::Vector2f position) {
 
 	// Creating the chili pepper
@@ -58,6 +62,43 @@ GameBoard::GameBoard() {
 		float x = payload["x"];
 		float y = payload["y"];
 		SpawnPepper(sf::Vector2f { x, y });
+	}));
+
+	Socket::io.socket()->on("breakPlatform", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		auto payload = nlohmann::json::parse(data->get_string());
+		float x = payload["x"];
+		float y = payload["y"];
+		std::string activatedById = payload["activatedById"];
+
+		std::vector<GameEngine::Entity*>* playerPlatforms;
+		if (Socket::isFish)
+			playerPlatforms = &fishPlatforms;
+		else
+			playerPlatforms = &cabbagePlatforms;
+
+		GameEngine::Entity* platform = nullptr;
+		for (int i = 0; i < playerPlatforms->size(); ++i) {
+			if (playerPlatforms->at(i)->GetPos().x == x && playerPlatforms->at(i)->GetPos().y == y) {
+				platform = playerPlatforms->at(i);
+			}
+		}
+
+		if (platform == nullptr) {
+			return;
+		}
+
+		auto pos = platform->GetPos();
+
+		if (Socket::isFish)
+			brokenFish->SetPos(pos);
+		else
+			brokenCabbage->SetPos(pos);
+
+		playerPlatforms->erase(playerPlatforms->begin() + currPlatform);
+		currPlatform = 1;
+
+		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
+		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}));
 
 	CreatePlatform();
@@ -276,8 +317,6 @@ void GameBoard::AddObstacles()
 std::vector<sf::Vector2f> fishPlatformCoords = { sf::Vector2f(320.f, 380.f) , sf::Vector2f(640.f, 550.f), sf::Vector2f(320.f, 720.f) };
 std::vector<sf::Vector2f> cabbagePlatformCoords = { sf::Vector2f(1600.f, 380.f), sf::Vector2f(1280.f, 550.f), sf::Vector2f(1600.f, 720.f)};
 
-GameEngine::Entity* brokenFish = new GameEngine::Entity();
-GameEngine::Entity* brokenCabbage = new GameEngine::Entity();
 
 void GameBoard::CreatePlatform(){
 	//float x_coords[num]{ 320.f, 640.f, 960.f, 1280.f, 1600.f  };
@@ -417,9 +456,9 @@ GameBoard::~GameBoard()
 {
 }
 
-int currPlatform = 1;
+
 GameEngine::Entity* cut;
-sf::Vector2f newPos{ 0.f, 0.f };
+sf::Vector2f pos{ 0.f, 0.f };
 bool cutMade = false;
 bool up_pressed = false;
 bool down_pressed = false;
@@ -511,7 +550,7 @@ void GameBoard::Update()
 			time_cut = 0;
 			GameEngine::Entity* newPlatform = new GameEngine::Entity();
 
-			newPlatform->SetPos(newPos);
+			newPlatform->SetPos(pos);
 			newPlatform->SetSize(sf::Vector2f(175.0f, 50.0f));
 
 			GameEngine::SpriteRenderComponent* newSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(newPlatform->AddComponent<GameEngine::SpriteRenderComponent>());
@@ -563,18 +602,26 @@ void GameBoard::Update()
 
 		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
 
-		newPos = platform->GetPos();
+		pos = platform->GetPos();
 
 		if (Socket::isFish)
-			brokenFish->SetPos(newPos);
+			brokenFish->SetPos(pos);
 		else
-			brokenCabbage->SetPos(newPos);
+			brokenCabbage->SetPos(pos);
 
-		cabbagePlatforms.erase(cabbagePlatforms.begin() + currPlatform);
+		opponentPlatforms->erase(opponentPlatforms->begin() + currPlatform);
 		currPlatform = 1;
 
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
+
+		nlohmann::json j;
+		std::string activatedById = Socket::playerId;
+		j["x"] = pos.x;
+		j["y"] = pos.y;
+		j["activatedById"] = activatedById;
+
+		Socket::io.socket()->emit("breakPlatform", j.dump());
 	}
 
 	if (Socket::isFishDead == true || Socket::isCabbageDead == true) {
