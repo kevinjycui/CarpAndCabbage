@@ -217,6 +217,24 @@ Menu::~Menu() {
 
 }
 
+GameOver::GameOver() {
+	
+}
+
+
+void GameOver::Update() {
+	//on click, call the function from gameenginemain
+	//if button clicked
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+		GameOver::~GameOver();
+		std::cout << "game over";
+	}
+}
+
+GameOver::~GameOver() {
+
+}
+
 void GameBoard::AddBackground()
 {
 	bg = new GameEngine::Entity();
@@ -419,6 +437,7 @@ void GameBoard::Update()
 		}
 		//move selector to previous platform
 	}
+
 }
 
 void GameBoard::CreateCuts() {
