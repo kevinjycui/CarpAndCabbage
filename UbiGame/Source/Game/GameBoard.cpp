@@ -570,7 +570,7 @@ void GameBoard::CreateCuts() {
 	cut->SetPos(sf::Vector2f(1960.f, 2000.f));
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
 	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
+	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
 }
 
 GameOver::GameOver() {
