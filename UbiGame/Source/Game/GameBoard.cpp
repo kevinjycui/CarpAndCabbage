@@ -442,6 +442,9 @@ void GameBoard::Update()
 		}
 		//move selector to previous platform
 	}
+	if (Socket::isGameOver) {
+		GameEngine::GameEngineMain::GetInstance()->GameOver();
+	}
 }
 
 void GameBoard::CreateCuts() {
