@@ -152,7 +152,7 @@ Menu::Menu() {
 
 		// Start the game
 		Menu::~Menu();
-		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+		GameEngine::GameEngineMain::GetInstance()->StartGame(Socket::isFish);
 	}));
 
 	AddButton();
