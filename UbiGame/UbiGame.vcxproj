@@ -130,6 +130,7 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\socket.io-client-cpp\lib\rapidjson\include\;$(SolutionDir)..\socket.io-client-cpp\lib\websocketpp\;$(SolutionDir)..\socket.io-client-cpp\src;$(SolutionDir)..\socket.io-client-cpp\lib\asio\asio\include\;$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -147,7 +148,8 @@ XCOPY "$(SolutionDir)..\SFML-2.5.0\bin" "$(TargetDir)" /S /Y /I</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\socket.io-client-cpp\lib\rapidjson\include\;$(SolutionDir)..\socket.io-client-cpp\lib\websocketpp\;$(SolutionDir)..\socket.io-client-cpp\src;$(SolutionDir)..\socket.io-client-cpp\lib\asio\asio\include\;$(ProjectDir)\Source\;$(SolutionDir)..\SFML-2.5.0\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WEBSOCKETPP_CPP11_STL;_WEBSOCKETPP_CPP11_FUNCTIONAL_;ASIO_STANDALONE;BOOST_DATE_TIME_NO_LIB;BOOST_REGEX_NO_LIB;_WEBSOCKETPP_CPP11_TYPE_TRAITS_;_WEBSOCKETPP_CPP11_RANDOM_DEVICE_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
