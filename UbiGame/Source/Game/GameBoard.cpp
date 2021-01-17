@@ -21,6 +21,7 @@
 #include <iostream>
 #include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
 #include "../../BrokenPlatformComponent.h"
+#include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
 
 using sio::socket;
 using sio::message;
@@ -104,6 +105,7 @@ GameBoard::GameBoard() {
 	CreatePlatform();
 	CreateCuts();
 	CreatePepper();
+	DrawText();
 }
 
 void GameBoard::CreatePepper() {
@@ -150,7 +152,7 @@ Menu::Menu() {
 
 		// Start the game
 		Menu::~Menu();
-		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+		GameEngine::GameEngineMain::GetInstance()->StartGame(Socket::isFish);
 	}));
 
 	AddButton();
@@ -469,6 +471,8 @@ bool comparator(const GameEngine::Entity* lhs, const GameEngine::Entity* rhs) {
 	return lhs->GetPos().y < rhs->GetPos().y;
 }
 
+bool deadGameOver = false;
+
 void GameBoard::Update()
 {
 	std::vector<GameEngine::Entity*>* opponentPlatforms;
@@ -572,6 +576,22 @@ void GameBoard::CreateCuts() {
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
 }
+
+void GameBoard::DrawText() {
+	GameEngine::Entity* text = new GameEngine::Entity();
+
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(text);
+
+	text->SetPos(sf::Vector2f(100.0f, 65.0f));
+	text->SetSize(sf::Vector2f(175.0f, 50.0f));
+
+	GameEngine::TextRenderComponent* textRender = static_cast<GameEngine::TextRenderComponent *>(text->AddComponent<GameEngine::TextRenderComponent>());
+
+	textRender->SetString("test");
+	//textRender->SetFont("arial.ttf");
+
+}
+
 
 GameOver::GameOver() {
 	AddGOBackground();
