@@ -218,24 +218,17 @@ Menu::~Menu() {
 
 }
 
-GameOver::GameOver() {
-	
-}
-
 
 void GameOver::Update() {
 	//on click, call the function from gameenginemain
 	//if button clicked
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
 		GameOver::~GameOver();
-		GameEngine::GameEngineMain::GetInstance()->GameOver();
+		GameEngine::GameEngineMain::GetInstance()->EndGame();
 		std::cout << "game over";
 	}
 }
 
-GameOver::~GameOver() {
-
-}
 
 void GameBoard::AddBackground()
 {
@@ -459,6 +452,10 @@ void GameBoard::Update()
 	}
 	else
 		pressed = false;
+
+	if (Socket::isGameOver) {
+		GameEngine::GameEngineMain::GetInstance()->EndGame();
+	}
 }
 
 void GameBoard::CreateCuts() {
@@ -468,4 +465,26 @@ void GameBoard::CreateCuts() {
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
+}
+
+GameOver::GameOver() {
+	AddGOBackground();
+}
+
+GameOver::~GameOver() {
+
+}
+
+void GameOver::AddGOBackground(){
+	bg = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
+
+	bg->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+	bg->SetSize(sf::Vector2f(1920.0f, 1080.0f));
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(bg->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
 }

@@ -34,6 +34,8 @@ namespace GameEngine
 
 			ChiliPepper,
 
+			GameEnd,
+
 			Count,
 
 		};
@@ -53,6 +55,7 @@ namespace GameEngine
 		case eTexture::Title: return "title.png";
 		case eTexture::ChiliPepper: return "pepper.png";
 		case eTexture::DottedLine: return "dotted_line.png";
+		case eTexture::GameEnd: return "gameover.png";
 		}
 		return "UnknownTexType";
 	}
