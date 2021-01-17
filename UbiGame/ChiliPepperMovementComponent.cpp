@@ -26,8 +26,6 @@ typedef std::chrono::high_resolution_clock Clock;
 using namespace GameEngine;
 using namespace Game;
 
-using namespace Game;
-
 typedef sf::Rect<float> AABBRect;
 
 float acceleration_y = 0.098f;
