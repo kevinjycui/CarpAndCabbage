@@ -22,8 +22,6 @@ void BrokenPlatformComponent::Update()
 {
 	__super::Update();
 
-	std::cout << velocity << "\n";
-
 	if (GetEntity()->GetPos().y >= 1100)
 		velocity = -acceleration;
 

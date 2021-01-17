@@ -6,6 +6,8 @@
 #include "../Socket.h"
 #include <iostream>
 #include <string>
+#include <ctime>
+#include <stdlib.h>
 #include <GameEngine/EntitySystem/Components/SpriteRenderComponent.h>
 
 #include "GameEngine/EntitySystem/Components/CollidableComponent.h"
@@ -24,6 +26,8 @@ using sio::message;
 
 static float velocity_y = 0.f;
 static float acceleration_y = 0.098f;
+
+static float velocity_x = 0.f;
 
 void PlayerMovementComponent::Update()
 {
@@ -101,6 +105,7 @@ void PlayerMovementComponent::Update()
                 }
                 displacement.x = 0.f;
                 displacement.y = 0.f;
+                velocity_x = 0.f;
         }
     }
     else {
@@ -118,6 +123,7 @@ void PlayerMovementComponent::Update()
                 }
                 displacement.x = 0.f;
                 displacement.y = 0.f;
+                velocity_x = 0.f;
         }
     }
 
@@ -126,14 +132,14 @@ void PlayerMovementComponent::Update()
 
     auto size = this->GetEntity()->GetSize();
 
+    AABBRect intersection;
+    AABBRect myBox = AABBRect(position, size);
+
     for (int a = 0; a < collidables.size(); ++a)
     {
         CollidableComponent* colComponent = collidables[a];
         if (colComponent->GetEntity() == this->GetEntity())
             continue;
-
-        AABBRect intersection;
-        AABBRect myBox = AABBRect(position, size);
 
         AABBRect collideBox = AABBRect(
             colComponent->GetEntity()->GetPos(), colComponent->GetEntity()->GetSize()); //colComponent->GetWorldAABB();
@@ -154,8 +160,22 @@ void PlayerMovementComponent::Update()
         }
     }
 
+    std::vector<GameEngine::Entity*> peppers = GameEngine::GameEngineMain::GetInstance()->m_gameBoard->peppers;
+
+    for (GameEngine::Entity* pepper : peppers) {
+
+        AABBRect chiliRect = AABBRect(pepper->GetPos(), pepper->GetSize());
+
+        if (myBox.intersects(chiliRect)) {
+            velocity_y += -8.f;
+            srand((unsigned int)time(0));
+            velocity_x = ((float)(rand() % 400 - 200) / 10.f);
+            std::cout << velocity_x << "\n";
+        }
+    }
+
     // Update the entity position locally
-    sf::Vector2f gravity{ 0.0f, velocity_y };
+    sf::Vector2f gravity{ velocity_x, velocity_y };
 
     displacement += gravity;
 

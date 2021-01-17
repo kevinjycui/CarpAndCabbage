@@ -44,7 +44,7 @@ void GameBoard::SpawnPepper(sf::Vector2f position) {
 	chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
 	chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
 
-	obstacles.push_back(chiliPepper);
+	peppers.push_back(chiliPepper);
 }
 
 GameBoard::GameBoard() {
