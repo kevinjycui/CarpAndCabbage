@@ -412,26 +412,29 @@ void GameBoard::Update()
 	else
 		opponentPlatforms = &fishPlatforms;
 
-		//create global variable for how many platforms there are and give each one an index, top = 0
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !pressed) {
-		pressed = true;
-		if (currPlatform > 0) {
-			currPlatform--;
-			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
-			//move selector to next platform
+	//create global variable for how many platforms there are and give each one an index, top = 0
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (!pressed) {
+			pressed = true;
+			if (currPlatform > 0) {
+				currPlatform--;
+				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
+				//move selector to next platform
+			}
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !pressed) {
-		pressed = true;
-		if (currPlatform < fishPlatforms.size() - 1) {
-			currPlatform++;
-			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
+	else if (!pressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		if (!pressed) {
+			pressed = true;
+			if (currPlatform < fishPlatforms.size() - 1) {
+				currPlatform++;
+				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 
+			}
 		}
 		//move selector to previous platform
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !cutMade) {
-
+	else if (!cutMade && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 		cutMade = true;
 		pressed = false;
 
@@ -459,7 +462,6 @@ void GameBoard::Update()
 	}
 	else
 		pressed = false;
-
 }
 
 void GameBoard::CreateCuts() {
