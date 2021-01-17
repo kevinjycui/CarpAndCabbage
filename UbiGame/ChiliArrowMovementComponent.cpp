@@ -57,7 +57,6 @@ void ChiliArrowMovementComponent::Update()
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
     GetEntity()->SetPos(newPos);
 
-
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
         // 5 second cooldown
         if (difftime(std::time(nullptr), lastActivated) <= 5) {

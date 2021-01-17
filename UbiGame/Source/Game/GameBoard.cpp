@@ -19,6 +19,7 @@
 #include "sio_socket.h"
 #include "json.hpp"
 #include <iostream>
+#include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
 
 using sio::socket;
 using sio::message;
@@ -49,7 +50,7 @@ GameBoard::GameBoard() {
 			chiliPepper->SetPos(sf::Vector2f(0.0f + x, 25.0f));
 		}
 
-		chiliPepper->SetSize(sf::Vector2f(20.0f, 20.0f));
+		chiliPepper->SetSize(sf::Vector2f(50.0f, 50.0f));
 		chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
 
 		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
@@ -90,6 +91,28 @@ void GameBoard::CreatePepper() {
 
 Menu::Menu() {
 	AddMenuBackground();
+
+	// Room was full
+	Socket::io.socket()->on("fullRoom", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		Socket::isFullRoom = true;
+		Socket::isWaitingOnOtherPlayer = false;
+	}));
+
+	// You started a room
+	Socket::io.socket()->on("firstInRoom", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		Socket::firstInRoom = true;
+	}));
+
+	// A player joined your room
+	Socket::io.socket()->on("newPlayer", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		std::string opponentId = data->get_string();
+		Socket::opponentId = opponentId;
+
+		// Start the game
+		Menu::~Menu();
+		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+	}));
+
 	AddButton();
 	AddTextbox();
 }
@@ -133,24 +156,83 @@ void Menu::AddButton() {
 }
 
 void Menu::AddTextbox() {
-
+	textbox = new GameEngine::TextRenderComponent();
+	// GameEngine::GameEngineMain::GetInstance()->AddEntity(dynamic_cast<GameEngine::Entity*>(textbox));
+	// textbox->SetString("Hi");
 }
 
 void Menu::Update() {
-	//on click, call the function from gameenginemain
-	//if button clicked
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+	// Debug key for 1-player
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+		// Start the game
 		Menu::~Menu();
 		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
 	}
-	// Start as opponent
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		Menu::~Menu();
-		GameEngine::GameEngineMain::GetInstance()->StartGame(false);
+
+	//on click, call the function from gameenginemain
+	//if button clicked
+
+	// Start as fish
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+		if (!Socket::isWaitingOnOtherPlayer) {
+			Socket::isWaitingOnOtherPlayer = true;
+			Socket::isFish = true;
+			// Getting socket.io connection
+			Socket::io.socket()->emit("joinRoom", std::string("roomId"), [&](sio::message::list const& msg) {
+				std::string result_str = msg.at(0)->get_string();
+				// Non-empty string is opponentId
+				if (!result_str.empty()) {
+					Socket::opponentId = result_str;
+
+					// Start the game
+					Menu::~Menu();
+					GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+				}
+			});
+		}
+	}
+
+	// Start as cabbage
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		if (!Socket::isWaitingOnOtherPlayer) {
+			Socket::isWaitingOnOtherPlayer = true;
+			Socket::isFish = false;
+			// Getting socket.io connection
+			Socket::io.socket()->emit("joinRoom", std::string("roomId"), [&](sio::message::list const& msg) {
+				std::string result_str = msg.at(0)->get_string();
+				// Non-empty string is opponentId
+				if (!result_str.empty()) {
+					Socket::opponentId = result_str;
+
+					// Start the game
+					Menu::~Menu();
+					GameEngine::GameEngineMain::GetInstance()->StartGame(false);
+				}
+			});
+		}
 	}
 }
 
 Menu::~Menu() {
+
+}
+
+GameOver::GameOver() {
+	
+}
+
+
+void GameOver::Update() {
+	//on click, call the function from gameenginemain
+	//if button clicked
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+		GameOver::~GameOver();
+		GameEngine::GameEngineMain::GetInstance()->GameOver();
+		std::cout << "game over";
+	}
+}
+
+GameOver::~GameOver() {
 
 }
 
@@ -359,9 +441,6 @@ void GameBoard::Update()
 			cutCabbage->SetPos(fishPlatformCoords.at(currPlatformCabbage));//cut.setpos
 		}
 		//move selector to previous platform
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !Socket::isFish) {
-
 	}
 }
 

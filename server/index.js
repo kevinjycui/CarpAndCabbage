@@ -7,30 +7,50 @@ io.on('connection', (socket) => {
 
 	// The socket's room ID
 	let socketRoomId;
-	let playerId = socket.id;
-	let opponentId;
+
+	socket.on('getPlayerId', (ack) => {
+		ack(socket.id);
+	});
 
 	socket.on('joinRoom', (roomId, ack) => {
-		console.log(`${socket.id} has joined ${roomId}`);
-		socket.join(roomId);
-		socketRoomId = roomId;
+		function joinRoom() {
+			socket.join(roomId);
+			console.log(`${socket.id} has joined ${roomId}`);
+			socketRoomId = roomId;
+		}
 
+		console.log(io.sockets.adapter.rooms.get(roomId));
 		// If only one person in the room
-		if (io.sockets.adapter.rooms[roomId] == null || io.sockets.adapter.rooms[roomId].length <= 1) {
+		if (io.sockets.adapter.rooms.get(roomId) == null || io.sockets.adapter.rooms.get(roomId).size === 0) {
+			joinRoom();
+
+			console.log('first person in room');
+
 			// Tell client that they are the first in room, client will display
 			// something like a waiting screen
 			io.to(socket.id).emit('firstInRoom');
 		}
 		// If the room is full (already has 2 players in it)
-		else if (io.sockets.adapter.rooms[roomId].length === 2) {
+		else if (io.sockets.adapter.rooms.get(roomId).size === 2) {
+			console.log("full room, can't join");
+
 			io.to(socket.id).emit('fullRoom');
 		}
 		// Otherwise, have the player join the room and emit the event
 		else {
-			socket.broadcast.to(roomId).emit('newPlayer', socket.id);
-		}
+			joinRoom();
 
-		ack(socket.id);
+			console.log("join successful")
+
+			socket.broadcast.to(roomId).emit('newPlayer', socket.id);
+			const otherPlayerId = [...io.sockets.adapter.rooms.get(roomId).values()].find((socketId) =>
+				socketId !== socket.id
+			)
+			console.log(socket.id, otherPlayerId);
+			return ack(otherPlayerId);
+		}
+		// Empty string means don't start game
+		return ack('');
 	});
 
 	socket.on('movePlayer', (payloadJSON) => {
@@ -55,6 +75,8 @@ io.on('connection', (socket) => {
 	// Cleaning up when a socket disconencts
 	socket.on('disconnect', () => {
 		socket.removeAllListeners();
+
+		console.log(`${socket.id} has disconnected`);
 	})
 })
 

@@ -4,5 +4,8 @@
 sio::client Socket::io;
 std::string Socket::playerId;
 std::string Socket::opponentId;
-bool Socket::isFish;
-bool Socket::isGameOver;
+bool Socket::isFish = false;
+bool Socket::isGameOver = false;
+bool Socket::isFullRoom = false;
+bool Socket::firstInRoom = false;
+bool Socket::isWaitingOnOtherPlayer = false;
