@@ -33,6 +33,7 @@
     <ClCompile Include="OpponentMovementComponent.cpp" />
     <ClCompile Include="ChiliArrowMovementComponent.cpp" />
     <ClCompile Include="ChiliPepperMovementComponent.cpp" />
+    <ClCompile Include="BrokenPlatformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameEngine\GameEngineMain.cpp">
@@ -147,5 +148,6 @@
     <ClInclude Include="OpponentMovementComponent.h" />
     <ClInclude Include="ChiliArrowMovementComponent.h" />
     <ClInclude Include="ChiliPepperMovementComponent.h" />
+    <ClInclude Include="BrokenPlatformComponent.h" />
   </ItemGroup>
 </Project>

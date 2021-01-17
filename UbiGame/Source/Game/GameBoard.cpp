@@ -20,6 +20,7 @@
 #include "json.hpp"
 #include <iostream>
 #include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
+#include "../../BrokenPlatformComponent.h"
 
 using sio::socket;
 using sio::message;
@@ -244,17 +245,14 @@ void GameBoard::AddObstacles()
 
 }
 
-int numFish = 2;
-int numCabbage = 2;
-
-std::vector<sf::Vector2f> fishPlatformCoords = { sf::Vector2f(320.f, 720.f), sf::Vector2f(640.f, 550.f) };
-std::vector<sf::Vector2f> cabbagePlatformCoords = { sf::Vector2f(1280.f, 550.f), sf::Vector2f(1600.f, 720.f) };
+std::vector<sf::Vector2f> fishPlatformCoords = { sf::Vector2f(320.f, 380.f) , sf::Vector2f(640.f, 550.f), sf::Vector2f(320.f, 720.f) };
+std::vector<sf::Vector2f> cabbagePlatformCoords = { sf::Vector2f(1600.f, 380.f), sf::Vector2f(1280.f, 550.f), sf::Vector2f(1600.f, 720.f)};
 
 void GameBoard::CreatePlatform(){
 	//float x_coords[num]{ 320.f, 640.f, 960.f, 1280.f, 1600.f  };
 	//float y_coords[num]{ 720.f, 550.f, 720.f, 550.f, 720.f };
 
-	for (int i = 0; i < numFish; i++) {
+	for (int i = 0; i < fishPlatformCoords.size(); i++) {
 
 		GameEngine::Entity* platform = new GameEngine::Entity();
 
@@ -273,7 +271,7 @@ void GameBoard::CreatePlatform(){
 
 		fishPlatforms.push_back(platform);
 	}
-	for (int i = 0; i < numCabbage; i++) {
+	for (int i = 0; i < cabbagePlatformCoords.size(); i++) {
 
 		GameEngine::Entity* platform = new GameEngine::Entity();
 
@@ -364,57 +362,67 @@ GameBoard::~GameBoard()
 {
 }
 
-int currPlatformFish = 0;
-int currPlatformCabbage = 0;
-GameEngine::Entity* cutFish;
-GameEngine::Entity* cutCabbage;
+int currPlatform = 0;
+GameEngine::Entity* cut;
+bool cutMade = false;
+
 void GameBoard::Update()
 {	
-	//create global variable for how many platforms there are and give each one an index, top = 0
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)&&Socket::isFish) {
-		if (currPlatformFish > 0) {
-			currPlatformFish --;
-			cutFish->SetPos(cabbagePlatformCoords.at(currPlatformFish));//cut.setpos
+	std::vector<GameEngine::Entity*>* opponentPlatforms;
+	if (Socket::isFish)
+		opponentPlatforms = &cabbagePlatforms;
+	else
+		opponentPlatforms = &fishPlatforms;
+
+		//create global variable for how many platforms there are and give each one an index, top = 0
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (currPlatform > 0) {
+			currPlatform--;
+			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 			//move selector to next platform
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)&&Socket::isFish) {
-		if (currPlatformFish < fishPlatforms.size() - 1) {
-			currPlatformFish++;
-			cutFish->SetPos(cabbagePlatformCoords.at(currPlatformFish));//cut.setpos
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		if (currPlatform < fishPlatforms.size() - 1) {
+			currPlatform++;
+			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 
 		}
 		//move selector to previous platform
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !Socket::isFish) {
-		if (currPlatformCabbage > 0) {
-			currPlatformCabbage--;
-			cutCabbage->SetPos(fishPlatformCoords.at(currPlatformCabbage));//cut.setpos
-			//move selector to next platform
-		}
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !Socket::isFish) {
-		if (currPlatformCabbage < cabbagePlatforms.size() - 1) {
-			currPlatformCabbage++;
-			cutCabbage->SetPos(fishPlatformCoords.at(currPlatformCabbage));//cut.setpos
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !cutMade) {
 
-		}
-		//move selector to previous platform
+		cutMade = true;
+
+		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
+
+		cabbagePlatforms.erase(cabbagePlatforms.begin() + currPlatform);
+		currPlatform = 0;
+
+		GameEngine::Entity* broken = new GameEngine::Entity();
+
+		GameEngine::GameEngineMain::GetInstance()->AddEntity(broken);
+
+		broken->SetPos(platform->GetPos());
+		broken->SetSize(platform->GetSize());
+
+		GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(broken->AddComponent<GameEngine::SpriteRenderComponent>());
+
+		spriteRender->SetFillColor(sf::Color::Transparent);
+		spriteRender->SetTexture(GameEngine::eTexture::BrokenBread);
+
+		broken->AddComponent<Game::BrokenPlatformComponent>();
+
+		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
+		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
 }
 
 void GameBoard::CreateCuts() {
-	cutFish = new GameEngine::Entity();
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(cutFish);
-	cutFish->SetSize(sf::Vector2f(8.0f, 65.0f));
-	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cutFish->AddComponent<GameEngine::SpriteRenderComponent>());
+	cut = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(cut);
+	cut->SetSize(sf::Vector2f(8.0f, 65.0f));
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
-
-	cutCabbage = new GameEngine::Entity();
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(cutCabbage);
-	cutCabbage->SetSize(sf::Vector2f(8.0f, 65.0f));
-	GameEngine::SpriteRenderComponent* spriteRender1 = static_cast<GameEngine::SpriteRenderComponent*>(cutCabbage->AddComponent<GameEngine::SpriteRenderComponent>());
-	spriteRender1->SetFillColor(sf::Color::Transparent);
-	spriteRender1->SetTexture(GameEngine::eTexture::DottedLine);
 }
