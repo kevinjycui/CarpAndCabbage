@@ -65,6 +65,7 @@ namespace Game
 		void CreatePepper();
 		void SpawnPepper(sf::Vector2f pos);
 		std::vector<GameEngine::Entity*> obstacles;
+		std::vector<GameEngine::Entity*> peppers;
 		std::vector<GameEngine::Entity*> fishPlatforms;
 		std::vector<GameEngine::Entity*> cabbagePlatforms;
 		void CreateCuts();

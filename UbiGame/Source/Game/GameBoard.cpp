@@ -49,7 +49,7 @@ void GameBoard::SpawnPepper(sf::Vector2f position) {
 	chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
 	chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
 
-	obstacles.push_back(chiliPepper);
+	peppers.push_back(chiliPepper);
 }
 
 GameBoard::GameBoard() {
@@ -471,6 +471,75 @@ bool comparator(const GameEngine::Entity* lhs, const GameEngine::Entity* rhs) {
 	return lhs->GetPos().y < rhs->GetPos().y;
 }
 
+void GameBoard::BreakPlatform(std::vector<GameEngine::Entity*>* platforms, int platformIndex) {
+	cutMade = true;
+
+	GameEngine::Entity* platform = platforms->at(platformIndex);
+
+	sf::Vector2f pos = platform->GetPos();
+
+	if (Socket::isFish)
+		brokenFish->SetPos(pos);
+	else
+		brokenCabbage->SetPos(pos);
+
+	platforms->erase(cabbagePlatforms.begin() + platformIndex);
+	currPlatform = 1;
+
+	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
+	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
+}
+
+void GameBoard::BreakPlayerPlatform(sf::Vector2f pos) {
+	std::vector<GameEngine::Entity*>* playerPlatforms;
+	if (Socket::isFish)
+		playerPlatforms = &fishPlatforms;
+	else
+		playerPlatforms = &cabbagePlatforms;
+
+	GameEngine::Entity* platform = nullptr;
+	int platformIndex = 0;
+	for (; platformIndex < playerPlatforms->size(); ++platformIndex) {
+		if (playerPlatforms->at(platformIndex)->GetPos() == pos) {
+			platform = playerPlatforms->at(platformIndex);
+			break;
+		}
+	}
+
+	// Return early if platform was not found
+	if (platform == nullptr) {
+		return;
+	}
+	
+	BreakPlatform(playerPlatforms, platformIndex);
+}
+
+void GameBoard::BreakOpponentPlatform(sf::Vector2f pos) {
+	std::vector<GameEngine::Entity*>* opponentPlatforms;
+	if (Socket::isFish)
+		opponentPlatforms = &cabbagePlatforms;
+	else
+		opponentPlatforms = &fishPlatforms;
+
+	GameEngine::Entity* platform = nullptr;
+	int platformIndex = 0;
+	for (; platformIndex < opponentPlatforms->size(); ++platformIndex) {
+		if (opponentPlatforms->at(platformIndex)->GetPos() == pos) {
+			platform = opponentPlatforms->at(platformIndex);
+			break;
+		}
+	}
+
+	// Return early if platform was not found
+	if (platform == nullptr) {
+		return;
+	}
+
+	BreakPlatform(opponentPlatforms, platformIndex);
+}
+
+bool deadGameOver = false;
+
 void GameBoard::Update()
 {
 	std::vector<GameEngine::Entity*>* opponentPlatforms;
@@ -559,7 +628,8 @@ void GameBoard::Update()
 		Socket::io.socket()->emit("breakPlatform", j.dump());
 	}
 
-	if (Socket::isFishDead == true || Socket::isCabbageDead == true) {
+	if ((Socket::isFishDead == true || Socket::isCabbageDead == true) && deadGameOver == false) {
+		deadGameOver = true;
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
 
@@ -572,7 +642,7 @@ void GameBoard::CreateCuts() {
 	cut->SetPos(sf::Vector2f(1960.f, 2000.f));
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
 	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
+	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
 }
 
 void GameBoard::DrawText() {
@@ -611,4 +681,6 @@ void GameOver::AddGOBackground(){
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
+
+	printf("alsdkfjoqiwejr98q4j98qjrwefoidjsadlkjf");
 }
