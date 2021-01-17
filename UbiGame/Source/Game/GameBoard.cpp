@@ -676,6 +676,12 @@ void GameBoard::Update()
 			soundCompon->PlaySound(blankSoundId, true);
 		}
 	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		printf("askdjfhlkwjeflkqjwe");
+		escDown = true;
+		GameEngine::GameEngineMain::GetInstance()->Restart();
+	}
 }
 
 void GameBoard::CreateCuts() {
@@ -739,13 +745,5 @@ void GameOver::AddGOBackground(){
 			textSpriteRender->SetTexture(GameEngine::eTexture::LettuceWins);
 		else if (Socket::isCabbageDead)
 			textSpriteRender->SetTexture(GameEngine::eTexture::FishWins);
-	}
-}
-
-void GameOver::Update() {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-		printf("askdjfhlkwjeflkqjwe");
-		escDown = true;
-		GameEngine::GameEngineMain::GetInstance()->Restart();
 	}
 }
