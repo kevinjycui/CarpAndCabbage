@@ -21,12 +21,17 @@ using sio::message;
 static float velocity_y = 0.f;
 static float acceleration_y = 0.098f;
 
+float time_passed = 5;
+bool pressed = false;
+
 void ChiliArrowMovementComponent::Update()
 {
     __super::Update();
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
+
+    time_passed += dt;
 
     //By default the displacement is 0,0
     sf::Vector2f displacement{ 0.0f,0.0f };
@@ -58,24 +63,19 @@ void ChiliArrowMovementComponent::Update()
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
     GetEntity()->SetPos(newPos);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-        auto now = Clock::now();
-        std::cout << "here\n" << std::chrono::duration_cast<std::chrono::milliseconds>(now - lastChiliDropTime).count() << '\n';
-        // 5 seconds before chili drop
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastChiliDropTime).count() >= 5000) {
-            lastChiliDropTime = now;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && time_passed >= 5.f && !pressed) {
+        pressed = true;
+    } else if (pressed) {
+        pressed = false;
+        time_passed = 0.f;
 
-            std::cout << "pog\n";
+        nlohmann::json j;
+        std::string activatedById = Socket::playerId;
+        j["x"] = GetEntity()->GetPos().x;
+        j["y"] = GetEntity()->GetPos().y;
 
-            nlohmann::json j;
-            float x = GetEntity()->GetPos().x;
-            std::string activatedById = Socket::playerId;
-            j["x"] = x;
-            j["activatedById"] = activatedById;
-
-            Socket::io.socket()->emit("chiliAttack", j.dump());
-            GameEngineMain::GetInstance()->m_gameBoard->SpawnPepper(x, activatedById);
-        }
+        Socket::io.socket()->emit("chiliAttack", j.dump());
+        GameEngineMain::GetInstance()->m_gameBoard->SpawnPepper(GetEntity()->GetPos());
     }
 }
 
@@ -84,7 +84,6 @@ void ChiliArrowMovementComponent::OnAddToWorld() {
 }
 
 ChiliArrowMovementComponent::ChiliArrowMovementComponent() {
-    lastChiliDropTime = Clock::now();
 }
 
 ChiliArrowMovementComponent::~ChiliArrowMovementComponent() {}
