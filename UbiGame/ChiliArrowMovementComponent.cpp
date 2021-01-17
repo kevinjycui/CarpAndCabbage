@@ -21,12 +21,16 @@ using sio::message;
 static float velocity_y = 0.f;
 static float acceleration_y = 0.098f;
 
+float time_passed = 0;
+
 void ChiliArrowMovementComponent::Update()
 {
     __super::Update();
 
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
+
+    time_passed += dt;
 
     //By default the displacement is 0,0
     sf::Vector2f displacement{ 0.0f,0.0f };
@@ -58,20 +62,11 @@ void ChiliArrowMovementComponent::Update()
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
     GetEntity()->SetPos(newPos);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-        auto now = Clock::now();
-        std::cout << "here\n" << std::chrono::duration_cast<std::chrono::milliseconds>(now - lastChiliDropTime).count() << '\n';
-        // 5 seconds before chili drop
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastChiliDropTime).count() >= 5000) {
-            lastChiliDropTime = now;
-
-            std::cout << "pog\n";
-
-            nlohmann::json j;
-            j["x"] = GetEntity()->GetPos().x;
-            j["activatedById"] = Socket::playerId;
-            Socket::io.socket()->emit("chiliAttack", j.dump());
-        }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && time_passed >= 5.f) {
+        nlohmann::json j;
+        j["x"] = GetEntity()->GetPos().x;
+        j["activatedById"] = Socket::playerId;
+        Socket::io.socket()->emit("chiliAttack", j.dump());
     }
 }
 
@@ -80,7 +75,6 @@ void ChiliArrowMovementComponent::OnAddToWorld() {
 }
 
 ChiliArrowMovementComponent::ChiliArrowMovementComponent() {
-    lastChiliDropTime = Clock::now();
 }
 
 ChiliArrowMovementComponent::~ChiliArrowMovementComponent() {}
