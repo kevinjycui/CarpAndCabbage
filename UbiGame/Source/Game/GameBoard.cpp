@@ -209,7 +209,7 @@ void GameOver::Update() {
 	//if button clicked
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
 		GameOver::~GameOver();
-		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+		std::cout << "game over";
 	}
 }
 

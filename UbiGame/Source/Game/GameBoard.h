@@ -9,7 +9,7 @@
 namespace Game
 {
 	//Used for storing and controlling all game related entities, as well as providing an entry point for the "game" side of application	
-	class PlayerEntity;	
+	class PlayerEntity;
 
 	class Menu
 	{
@@ -17,6 +17,7 @@ namespace Game
 		Menu();
 		virtual ~Menu();
 		void Update();
+
 	private:
 		void AddMenuBackground();
 		GameEngine::Entity* bg;
@@ -32,13 +33,16 @@ namespace Game
 		GameOver();
 		virtual ~GameOver();
 		void Update();
+
 	private:
 		//void AddMenuBackground();
 		//GameEngine::Entity* bg;
 		//void AddButton();
 		//GameEngine::Entity* btn;
 		//void AddTextbox();
+		//GameEngine::TextRenderComponent* textbox;
 	};
+
 	class GameBoard
 	{
 	public:
@@ -46,7 +50,7 @@ namespace Game
 		virtual ~GameBoard();
 
 		void Update();
-		{ return Socket::isGameOver; }
+		bool IsGameOver() { return Socket::isGameOver; }
 
 		void CreatePlayer();   // <-- Added Function
 		void CreateOpponent();
@@ -65,4 +69,3 @@ namespace Game
 		GameEngine::Entity* cut;
 	};
 }
-
