@@ -586,7 +586,7 @@ void GameBoard::DrawText() {
 	GameEngine::TextRenderComponent* textRender = static_cast<GameEngine::TextRenderComponent *>(text->AddComponent<GameEngine::TextRenderComponent>());
 
 	textRender->SetString("test");
-	textRender->SetFont("arial.ttf");
+	//textRender->SetFont("arial.ttf");
 
 }
 
