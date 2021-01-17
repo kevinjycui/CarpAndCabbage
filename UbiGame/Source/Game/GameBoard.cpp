@@ -440,12 +440,14 @@ void GameBoard::Update()
 	}
 
 		//create global variable for how many platforms there are and give each one an index, top = 0
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !pressed) {
-		pressed = true;
-		if (currPlatform > 0) {
-			currPlatform--;
-			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
-			//move selector to next platform
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		if (!pressed) {
+			pressed = true;
+			if (currPlatform > 0) {
+				currPlatform--;
+				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
+				//move selector to next platform
+			}
 		}
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {

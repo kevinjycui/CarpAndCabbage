@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameEngine/EntitySystem/Component.h"
-#include <ctime>
+#include <chrono>
 
 namespace Game
 {
@@ -14,6 +14,6 @@ namespace Game
         virtual void Update() override;
         virtual void OnAddToWorld() override;
 
-        std::time_t lastActivated;
+        std::chrono::steady_clock::time_point lastChiliDropTime;
     };
 };
