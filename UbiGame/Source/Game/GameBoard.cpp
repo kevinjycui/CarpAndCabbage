@@ -402,6 +402,7 @@ GameBoard::~GameBoard()
 int currPlatform = 0;
 GameEngine::Entity* cut;
 bool cutMade = false;
+bool pressed = false;
 
 void GameBoard::Update()
 {	
@@ -412,14 +413,16 @@ void GameBoard::Update()
 		opponentPlatforms = &fishPlatforms;
 
 		//create global variable for how many platforms there are and give each one an index, top = 0
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !pressed) {
+		pressed = true;
 		if (currPlatform > 0) {
 			currPlatform--;
 			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 			//move selector to next platform
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !pressed) {
+		pressed = true;
 		if (currPlatform < fishPlatforms.size() - 1) {
 			currPlatform++;
 			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
@@ -430,6 +433,7 @@ void GameBoard::Update()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !cutMade) {
 
 		cutMade = true;
+		pressed = false;
 
 		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
 
@@ -453,6 +457,8 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
+	else
+		pressed = false;
 
 }
 
