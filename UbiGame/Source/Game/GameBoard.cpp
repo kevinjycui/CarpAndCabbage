@@ -448,21 +448,12 @@ void GameBoard::Update()
 			//move selector to next platform
 		}
 	}
-<<<<<<< HEAD
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		if (!pressed) {
 			pressed = true;
 			if (currPlatform < opponentPlatforms->size() - 1) {
 				currPlatform++;
 				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
-=======
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !pressed) {
-		pressed = true;
-		if (currPlatform < fishPlatforms.size() - 1) {
-			currPlatform++;
-			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
->>>>>>> 3d3336761a43ef8ab7f0c64ba22254a18bc3be90
-
 			}
 		}
 		//move selector to previous platform
