@@ -62,6 +62,13 @@ void GameEngineMain::StartGame(bool isFish)
 	sm_gameClock.restart();
 }
 
+void GameEngineMain::GameOver()
+{
+	m_gameBoard = new Game::GameBoard();
+	sm_deltaTimeClock.restart();
+	sm_gameClock.restart();
+}
+
 void GameEngineMain::CreateAndSetUpWindow()
 {
 	m_renderWindow = new sf::RenderWindow(sf::VideoMode((unsigned int)WINDOW_WIDTH, (unsigned int)WINDOW_HEIGHT), "Carp and Cabbage");
