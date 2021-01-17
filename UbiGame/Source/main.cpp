@@ -3,10 +3,16 @@
 #include "sio_socket.h"
 #include <iostream>
 
+// #define DEBUG
+
 int main()
 {
 	// Connect to Socket.IO server
-	Socket::io.connect("ws://carp-and-cabbage-server.herokuapp.com/");
+	#ifdef DEBUG
+		Socket::io.connect("localhost:3000");
+	#else
+		Socket::io.connect("ws://carp-and-cabbage-server.herokuapp.com/");
+	#endif
 
 	Socket::io.socket()->emit("getPlayerId", {}, [&](sio::message::list const& msg) {
 		std::string player_id = msg.at(0)->get_string();
