@@ -587,10 +587,9 @@ void GameBoard::DrawText() {
 	text->SetSize(sf::Vector2f(175.0f, 50.0f));
 
 	GameEngine::TextRenderComponent* textRender = static_cast<GameEngine::TextRenderComponent *>(text->AddComponent<GameEngine::TextRenderComponent>());
-
+	textRender->SetFillColor(sf::Color::Transparent);
 	textRender->SetString("test");
-	//textRender->SetFont("arial.ttf");
-
+	textRender->SetFont("arial.ttf");
 }
 
 
