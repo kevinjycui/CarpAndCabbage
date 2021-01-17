@@ -408,7 +408,7 @@ bool pressed = false;
 float time_cut = 0.f;
 
 void GameBoard::Update()
-{	
+{
 	std::vector<GameEngine::Entity*>* opponentPlatforms;
 	if (Socket::isFish)
 		opponentPlatforms = &cabbagePlatforms;
@@ -439,7 +439,7 @@ void GameBoard::Update()
 		}
 	}
 
-		//create global variable for how many platforms there are and give each one an index, top = 0
+	//create global variable for how many platforms there are and give each one an index, top = 0
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !pressed) {
 		pressed = true;
 		if (currPlatform > 0) {
@@ -454,10 +454,9 @@ void GameBoard::Update()
 			currPlatform++;
 			cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 
-			}
 		}
-		//move selector to previous platform
 	}
+	//move selector to previous platform
 	else if (!cutMade && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 		cutMade = true;
 		pressed = false;
