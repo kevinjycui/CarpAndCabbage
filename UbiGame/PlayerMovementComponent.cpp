@@ -33,6 +33,21 @@ void PlayerMovementComponent::Update()
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
 
+    lastAnimation += dt;
+
+    int maxFaces = 3;
+    if (Socket::isFish && lastAnimation > 1.f)
+    {
+        lastAnimation = 0;
+        ++m_currentFaceIndex;  // <-- We need to add a new int m_currentFaceIndex attribute member to the class
+        if (m_currentFaceIndex >= maxFaces) m_currentFaceIndex = 0;
+        GameEngine::SpriteRenderComponent* render = GetEntity()->GetComponent<GameEngine::SpriteRenderComponent>();
+        if (render)
+        {
+            render->SetTileIndex(sf::Vector2i(m_currentFaceIndex, 0));
+        }
+    }
+
     //By default the displacement is 0,0
     sf::Vector2f displacement{ 0.0f,0.0f };
     sf::Vector2f position = GetEntity()->GetPos();
@@ -156,6 +171,8 @@ void PlayerMovementComponent::Update()
 
 void PlayerMovementComponent::OnAddToWorld() {
     __super::OnAddToWorld();
+    m_currentFaceIndex = 0;
+    lastAnimation = 0.f;
 }
 
 PlayerMovementComponent::PlayerMovementComponent(){
