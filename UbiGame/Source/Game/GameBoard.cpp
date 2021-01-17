@@ -30,10 +30,12 @@ using namespace Game;
 
 static GameEngine::SoundComponent* soundCompon;
 static GameEngine::SoundComponent* playerSoundCompon;
+static GameEngine::SoundComponent* chiliSoundCompon;
 
 static int soundId;
 static int blankSoundId;
 static int sliceSoundId;
+static int fireSoundId;
 
 int currPlatform = 1;
 GameEngine::Entity* brokenFish = new GameEngine::Entity();
@@ -71,6 +73,9 @@ GameBoard::GameBoard() {
 	AddObstacles();
 
 	Socket::io.socket()->on("chiliAttack", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		
+		chiliSoundCompon->PlaySound(fireSoundId, true);
+
 		auto payload = nlohmann::json::parse(data->get_string());
 		float x = payload["x"];
 		float y = payload["y"];
@@ -166,6 +171,8 @@ void GameBoard::CreatePepper() {
 	chiliArrowSpriteRender->SetFillColor(sf::Color::Transparent);
 	chiliArrowSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
 
+	chiliSoundCompon = static_cast<GameEngine::SoundComponent*>
+		(chiliArrow->AddComponent<GameEngine::SoundComponent>());
 
 	obstacles.push_back(chiliArrow);
 }
@@ -235,6 +242,7 @@ void Menu::AddButton() {
 	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
 	blankSoundId = soundCompon->LoadSoundFromFile("Resources/audio/blank.wav");
 	sliceSoundId = soundCompon->LoadSoundFromFile("Resources/audio/slice.wav");
+	fireSoundId = soundCompon->LoadSoundFromFile("Resources/audio/fire.wav");
 
 	soundCompon->PlaySound(soundId, true);
 
