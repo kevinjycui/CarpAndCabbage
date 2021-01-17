@@ -458,7 +458,7 @@ GameBoard::~GameBoard()
 
 
 GameEngine::Entity* cut;
-sf::Vector2f pos{ 0.f, 0.f };
+sf::Vector2f deletedPos{ 0.f, 0.f };
 bool cutMade = false;
 bool up_pressed = false;
 bool down_pressed = false;
@@ -467,73 +467,6 @@ float time_cut = 0.f;
 
 bool comparator(const GameEngine::Entity* lhs, const GameEngine::Entity* rhs) {
 	return lhs->GetPos().y < rhs->GetPos().y;
-}
-
-void GameBoard::BreakPlatform(std::vector<GameEngine::Entity*>* platforms, int platformIndex) {
-	cutMade = true;
-
-	GameEngine::Entity* platform = platforms->at(platformIndex);
-
-	sf::Vector2f pos = platform->GetPos();
-
-	if (Socket::isFish)
-		brokenFish->SetPos(pos);
-	else
-		brokenCabbage->SetPos(pos);
-
-	platforms->erase(cabbagePlatforms.begin() + platformIndex);
-	currPlatform = 1;
-
-	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
-	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
-}
-
-void GameBoard::BreakPlayerPlatform(sf::Vector2f pos) {
-	std::vector<GameEngine::Entity*>* playerPlatforms;
-	if (Socket::isFish)
-		playerPlatforms = &fishPlatforms;
-	else
-		playerPlatforms = &cabbagePlatforms;
-
-	GameEngine::Entity* platform = nullptr;
-	int platformIndex = 0;
-	for (; platformIndex < playerPlatforms->size(); ++platformIndex) {
-		if (playerPlatforms->at(platformIndex)->GetPos() == pos) {
-			platform = playerPlatforms->at(platformIndex);
-			break;
-		}
-	}
-
-	// Return early if platform was not found
-	if (platform == nullptr) {
-		return;
-	}
-	
-	BreakPlatform(playerPlatforms, platformIndex);
-}
-
-void GameBoard::BreakOpponentPlatform(sf::Vector2f pos) {
-	std::vector<GameEngine::Entity*>* opponentPlatforms;
-	if (Socket::isFish)
-		opponentPlatforms = &cabbagePlatforms;
-	else
-		opponentPlatforms = &fishPlatforms;
-
-	GameEngine::Entity* platform = nullptr;
-	int platformIndex = 0;
-	for (; platformIndex < opponentPlatforms->size(); ++platformIndex) {
-		if (opponentPlatforms->at(platformIndex)->GetPos() == pos) {
-			platform = opponentPlatforms->at(platformIndex);
-			break;
-		}
-	}
-
-	// Return early if platform was not found
-	if (platform == nullptr) {
-		return;
-	}
-
-	BreakPlatform(opponentPlatforms, platformIndex);
 }
 
 void GameBoard::Update()
@@ -550,7 +483,7 @@ void GameBoard::Update()
 			time_cut = 0;
 			GameEngine::Entity* newPlatform = new GameEngine::Entity();
 
-			newPlatform->SetPos(pos);
+			newPlatform->SetPos(deletedPos);
 			newPlatform->SetSize(sf::Vector2f(175.0f, 50.0f));
 
 			GameEngine::SpriteRenderComponent* newSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(newPlatform->AddComponent<GameEngine::SpriteRenderComponent>());
@@ -602,12 +535,12 @@ void GameBoard::Update()
 
 		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
 
-		pos = platform->GetPos();
+		deletedPos = platform->GetPos();
 
 		if (Socket::isFish)
-			brokenFish->SetPos(pos);
+			brokenFish->SetPos(deletedPos);
 		else
-			brokenCabbage->SetPos(pos);
+			brokenCabbage->SetPos(deletedPos);
 
 		opponentPlatforms->erase(opponentPlatforms->begin() + currPlatform);
 		currPlatform = 1;
@@ -617,8 +550,8 @@ void GameBoard::Update()
 
 		nlohmann::json j;
 		std::string activatedById = Socket::playerId;
-		j["x"] = pos.x;
-		j["y"] = pos.y;
+		j["x"] = deletedPos.x;
+		j["y"] = deletedPos.y;
 		j["activatedById"] = activatedById;
 
 		Socket::io.socket()->emit("breakPlatform", j.dump());
