@@ -514,12 +514,15 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
+<<<<<<< HEAD
 	else
 		pressed = false;
 
 	if (Socket::isGameOver) {
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
+=======
+>>>>>>> b65941a61ca867d93e613457a6e9347030675e06
 }
 
 void GameBoard::CreateCuts() {
