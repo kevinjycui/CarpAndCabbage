@@ -62,9 +62,9 @@ void GameEngineMain::StartGame(bool isFish)
 	sm_gameClock.restart();
 }
 
-void GameEngineMain::GameOver()
+void GameEngineMain::EndGame()
 {
-	m_gameBoard = new Game::GameBoard();
+	m_gameOver = new Game::GameOver();
 	sm_deltaTimeClock.restart();
 	sm_gameClock.restart();
 }

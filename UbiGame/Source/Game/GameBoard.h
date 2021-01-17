@@ -33,8 +33,9 @@ namespace Game
 		GameOver();
 		virtual ~GameOver();
 		void Update();
-
 	private:
+		void AddGOBackground();
+		GameEngine::Entity* bg;
 		//void AddMenuBackground();
 		//GameEngine::Entity* bg;
 		//void AddButton();
