@@ -41,6 +41,7 @@ int currPlatform = 1;
 GameEngine::Entity* brokenFish = new GameEngine::Entity();
 GameEngine::Entity* brokenCabbage = new GameEngine::Entity();
 
+bool escDown = false;
 bool muted = false;
 bool mute_pressed = false;
 
@@ -267,8 +268,10 @@ void Menu::AddTextbox() {
 void Menu::Update() {
 	// Debug key for 1-player
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+		printf("ASDFASDFASDFQWERQGHJHWORUGTHBWOEITG");
 		// Start the game
 		Menu::~Menu();
+		escDown = false;
 		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
 	}
 
@@ -278,6 +281,7 @@ void Menu::Update() {
 	// Start as fish
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
 		if (!Socket::isWaitingOnOtherPlayer) {
+			escDown = false;
 			Socket::isWaitingOnOtherPlayer = true;
 			Socket::isFish = true;
 			// Getting socket.io connection
@@ -298,6 +302,7 @@ void Menu::Update() {
 	// Start as cabbage
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 		if (!Socket::isWaitingOnOtherPlayer) {
+			escDown = false;
 			Socket::isWaitingOnOtherPlayer = true;
 			Socket::isFish = false;
 			// Getting socket.io connection
@@ -697,9 +702,9 @@ void GameBoard::DrawText() {
 	//textRender->SetFont("arial.ttf");
 }
 
-
 GameOver::GameOver() {
 	AddGOBackground();
+	Update();
 }
 
 GameOver::~GameOver() {
@@ -707,32 +712,40 @@ GameOver::~GameOver() {
 }
 
 void GameOver::AddGOBackground(){
+	if (!escDown) {
+		bg = new GameEngine::Entity();
+		GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
 
-	bg = new GameEngine::Entity();
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
+		bg->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+		bg->SetSize(sf::Vector2f(1920.0f, 1080.0f));
 
-	bg->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
-	bg->SetSize(sf::Vector2f(1920.0f, 1080.0f));
+		GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+			(bg->AddComponent<GameEngine::SpriteRenderComponent>());
 
-	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
-		(bg->AddComponent<GameEngine::SpriteRenderComponent>());
+		spriteRender->SetFillColor(sf::Color::Transparent);
+		spriteRender->SetTexture(GameEngine::eTexture::Background);
 
-	spriteRender->SetFillColor(sf::Color::Transparent);
-	spriteRender->SetTexture(GameEngine::eTexture::Background);
+		GameEngine::Entity* endScreen = new GameEngine::Entity();
+		GameEngine::GameEngineMain::GetInstance()->AddEntity(endScreen);
 
-	GameEngine::Entity* endScreen = new GameEngine::Entity();
-	GameEngine::GameEngineMain::GetInstance()->AddEntity(endScreen);
+		endScreen->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+		endScreen->SetSize(sf::Vector2f(800.0f, 450.0f));
 
-	endScreen->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
-	endScreen->SetSize(sf::Vector2f(800.0f, 450.0f));
+		GameEngine::SpriteRenderComponent* textSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+			(endScreen->AddComponent<GameEngine::SpriteRenderComponent>());
 
-	GameEngine::SpriteRenderComponent* textSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>
-		(endScreen->AddComponent<GameEngine::SpriteRenderComponent>());
+		textSpriteRender->SetFillColor(sf::Color::Transparent);
+		if (Socket::isFishDead)
+			textSpriteRender->SetTexture(GameEngine::eTexture::LettuceWins);
+		else if (Socket::isCabbageDead)
+			textSpriteRender->SetTexture(GameEngine::eTexture::FishWins);
+	}
+}
 
-	textSpriteRender->SetFillColor(sf::Color::Transparent);
-	if (Socket::isFishDead)
-		textSpriteRender->SetTexture(GameEngine::eTexture::LettuceWins);
-	else if (Socket::isCabbageDead)
-		textSpriteRender->SetTexture(GameEngine::eTexture::FishWins);
-
+void GameOver::Update() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		printf("askdjfhlkwjeflkqjwe");
+		escDown = true;
+		GameEngine::GameEngineMain::GetInstance()->Restart();
+	}
 }

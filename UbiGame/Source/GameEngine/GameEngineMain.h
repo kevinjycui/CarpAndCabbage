@@ -31,6 +31,7 @@ namespace GameEngine
 		void OnInitialised();
 		void StartGame(bool isFish);
 		void EndGame();
+		void Restart();
 		bool IsGameOver() const { return m_gameBoard && m_gameBoard->IsGameOver(); }
 		Game::GameBoard* m_gameBoard;
 
