@@ -30,10 +30,14 @@ using namespace Game;
 
 static GameEngine::SoundComponent* soundCompon;
 static int soundId;
+static int blankSoundId;
 
 int currPlatform = 1;
 GameEngine::Entity* brokenFish = new GameEngine::Entity();
 GameEngine::Entity* brokenCabbage = new GameEngine::Entity();
+
+bool muted = false;
+bool mute_pressed = false;
 
 void GameBoard::SpawnPepper(sf::Vector2f position) {
 
@@ -223,6 +227,8 @@ void Menu::AddButton() {
 		(btn->AddComponent<GameEngine::SoundComponent>());
 
 	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
+	blankSoundId = soundCompon->LoadSoundFromFile("Resources/audio/blank.wav");
+
 	soundCompon->PlaySound(soundId, true);
 
 	GameEngine::Entity* instr = new GameEngine::Entity();
@@ -293,6 +299,22 @@ void Menu::Update() {
 			});
 		}
 	}
+
+	//mute the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		mute_pressed = true;
+	}
+	else if (mute_pressed) {
+		mute_pressed = false;
+		if (muted) {
+			muted = false;
+			soundCompon->PlaySound(soundId, true);
+		}
+		else {
+			muted = true;
+			soundCompon->PlaySound(blankSoundId, true);
+		}
+	}
 }
 
 Menu::~Menu() {
@@ -301,12 +323,21 @@ Menu::~Menu() {
 
 
 void GameOver::Update() {
-	//on click, call the function from gameenginemain
-	//if button clicked
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
-		GameOver::~GameOver();
-		GameEngine::GameEngineMain::GetInstance()->EndGame();
-		std::cout << "game over";
+
+	//mute the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		mute_pressed = true;
+	}
+	else if (mute_pressed) {
+		mute_pressed = false;
+		if (muted) {
+			muted = false;
+			soundCompon->PlaySound(soundId, true);
+		}
+		else {
+			muted = true;
+			soundCompon->PlaySound(blankSoundId, true);
+		}
 	}
 }
 
@@ -607,11 +638,17 @@ void GameBoard::Update()
 
 	//mute the game
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		soundCompon->PlaySound(soundId, false);
-	}
-	//unmute the game
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
-		soundCompon->PlaySound(soundId, false);
+		mute_pressed = true;
+	} else if (mute_pressed) {
+		mute_pressed = false;
+		if (muted) {
+			muted = false;
+			soundCompon->PlaySound(soundId, true);
+		}
+		else {
+			muted = true;
+			soundCompon->PlaySound(blankSoundId, true);
+		}
 	}
 }
 
