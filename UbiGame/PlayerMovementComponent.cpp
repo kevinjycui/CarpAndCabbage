@@ -54,6 +54,8 @@ void PlayerMovementComponent::Update()
     //Grabs how much time has passed since last frame
     const float dt = GameEngine::GameEngineMain::GetTimeDelta();
 
+    std::cout << dt << '\n';
+
     lastAnimation += dt;
 
     int maxFaces = 3;

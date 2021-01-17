@@ -82,10 +82,12 @@ GameBoard::GameBoard() {
 		else
 			playerPlatforms = &cabbagePlatforms;
 
+		int platformIndex = 0;
 		GameEngine::Entity* platform = nullptr;
-		for (int i = 0; i < playerPlatforms->size(); ++i) {
-			if (playerPlatforms->at(i)->GetPos().x == x && playerPlatforms->at(i)->GetPos().y == y) {
-				platform = playerPlatforms->at(i);
+		for (; platformIndex < playerPlatforms->size(); ++platformIndex) {
+			if (playerPlatforms->at(platformIndex)->GetPos().x == x && playerPlatforms->at(platformIndex)->GetPos().y == y) {
+				platform = playerPlatforms->at(platformIndex);
+				break;
 			}
 		}
 
@@ -100,11 +102,10 @@ GameBoard::GameBoard() {
 		else
 			brokenCabbage->SetPos(pos);
 
-		playerPlatforms->erase(playerPlatforms->begin() + currPlatform);
+		playerPlatforms->erase(playerPlatforms->begin() + platformIndex);
 		currPlatform = 1;
 
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
-		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}));
 
 	Socket::io.socket()->on("playerDied", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
@@ -116,6 +117,7 @@ GameBoard::GameBoard() {
 			else {
 				Socket::isCabbageDead = true;
 			}
+
 		}
 		else if (playerId == Socket::opponentId) {
 			if (Socket::isFish) {
@@ -125,6 +127,7 @@ GameBoard::GameBoard() {
 				Socket::isFishDead = true;
 			}
 		}
+		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}));
 
 	CreatePlatform();
