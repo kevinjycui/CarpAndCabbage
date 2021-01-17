@@ -26,10 +26,6 @@ GameEngineMain::GameEngineMain()
 	, m_gameBoard(nullptr)
 	, m_windowInitialised(false)
 {
-	// Getting socket.io connection
-	Socket::io.socket()->emit("joinRoom", std::string("roomId"), [&](sio::message::list const& msg) {
-		std::cout << msg.at(0)->get_string();
-	});
 
 	CreateAndSetUpWindow();
 	//Load predefined textures
