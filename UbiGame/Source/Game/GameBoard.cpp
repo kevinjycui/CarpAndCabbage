@@ -423,7 +423,7 @@ void GameBoard::Update()
 			}
 		}
 	}
-	else if (!pressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		if (!pressed) {
 			pressed = true;
 			if (currPlatform < fishPlatforms.size() - 1) {
