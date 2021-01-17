@@ -437,31 +437,47 @@ bool comparator(const GameEngine::Entity* lhs, const GameEngine::Entity* rhs) {
 	return lhs->GetPos().y < rhs->GetPos().y;
 }
 
-void GameBoard::BreakPlayerPlatform(sf::Vector2f pos) {
-	std::vector<GameEngine::Entity*>* opponentPlatforms;
-	if (Socket::isFish)
-		opponentPlatforms = &cabbagePlatforms;
-	else
-		opponentPlatforms = &fishPlatforms;
-
+void GameBoard::BreakPlatform(std::vector<GameEngine::Entity*>* platforms, int platformIndex) {
 	cutMade = true;
 
-	GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
+	GameEngine::Entity* platform = platforms->at(platformIndex);
 
-	newPos = platform->GetPos();
+	sf::Vector2f pos = platform->GetPos();
 
 	if (Socket::isFish)
-		brokenFish->SetPos(newPos);
+		brokenFish->SetPos(pos);
 	else
-		brokenCabbage->SetPos(newPos);
+		brokenCabbage->SetPos(pos);
 
-	cabbagePlatforms.erase(cabbagePlatforms.begin() + currPlatform);
+	platforms->erase(cabbagePlatforms.begin() + platformIndex);
 	currPlatform = 1;
 
 	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
+}
 
-	cabbagePlatformCoords;
+void GameBoard::BreakPlayerPlatform(sf::Vector2f pos) {
+	std::vector<GameEngine::Entity*>* playerPlatforms;
+	if (Socket::isFish)
+		playerPlatforms = &fishPlatforms;
+	else
+		playerPlatforms = &cabbagePlatforms;
+
+	GameEngine::Entity* platform = nullptr;
+	int platformIndex = 0;
+	for (; platformIndex < playerPlatforms->size(); ++platformIndex) {
+		if (playerPlatforms->at(platformIndex)->GetPos() == pos) {
+			platform = playerPlatforms->at(platformIndex);
+			break;
+		}
+	}
+
+	// Return early if platform was not found
+	if (platform == nullptr) {
+		return;
+	}
+	
+	BreakPlatform(playerPlatforms, platformIndex);
 }
 
 void GameBoard::BreakOpponentPlatform(sf::Vector2f pos) {
@@ -471,11 +487,21 @@ void GameBoard::BreakOpponentPlatform(sf::Vector2f pos) {
 	else
 		opponentPlatforms = &fishPlatforms;
 
-	for (int i = 0; i < opponentPlatforms->size(); ++i) {
-		if (opponentPlatforms->at(i)->GetPos() == pos) {
-
+	GameEngine::Entity* platform = nullptr;
+	int platformIndex = 0;
+	for (; platformIndex < opponentPlatforms->size(); ++platformIndex) {
+		if (opponentPlatforms->at(platformIndex)->GetPos() == pos) {
+			platform = opponentPlatforms->at(platformIndex);
+			break;
 		}
 	}
+
+	// Return early if platform was not found
+	if (platform == nullptr) {
+		return;
+	}
+
+	BreakPlatform(opponentPlatforms, platformIndex);
 }
 
 void GameBoard::Update()
@@ -517,7 +543,8 @@ void GameBoard::Update()
 	//create global variable for how many platforms there are and give each one an index, top = 0
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !cutMade) {
 		up_pressed = true;
-	} else if (up_pressed) {
+	}
+	else if (up_pressed) {
 		up_pressed = false;
 		if (currPlatform > 0) {
 			currPlatform--;
@@ -525,10 +552,11 @@ void GameBoard::Update()
 			//move selector to next platform
 		}
 	}
-	
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !cutMade) {
 		down_pressed = true;
-	} else if (down_pressed) {
+	}
+	else if (down_pressed) {
 		down_pressed = false;
 		if (currPlatform < opponentPlatforms->size() - 1) {
 			currPlatform++;
@@ -555,11 +583,6 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
-	else {
-		down_pressed = false;
-		up_pressed = false;
-	}
-
 	if (Socket::isGameOver) {
 		GameEngine::GameEngineMain::GetInstance()->EndGame();
 	}
