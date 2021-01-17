@@ -72,5 +72,6 @@ namespace Game
 		std::vector<GameEngine::Entity*> cabbagePlatforms;
 		void CreateCuts();
 		GameEngine::Entity* cut;
+		void DrawText();
 	};
 }
