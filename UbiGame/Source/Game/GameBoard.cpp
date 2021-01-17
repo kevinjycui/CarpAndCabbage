@@ -22,6 +22,7 @@
 #include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
 #include "../../BrokenPlatformComponent.h"
 #include "GameEngine/EntitySystem/Components/TextRenderComponent.h"
+#include <GameEngine/EntitySystem/Components/ParticleEmitterComponent.h>
 
 using sio::socket;
 using sio::message;
@@ -49,6 +50,10 @@ void GameBoard::SpawnPepper(sf::Vector2f position) {
 
 	chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
 	chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
+
+	GameEngine::ParticleEmitterComponent* emitterComponent = static_cast<GameEngine::ParticleEmitterComponent*>(chiliPepper->AddComponent<GameEngine::ParticleEmitterComponent>());
+	GameEngine::SParticleDefinition particleDef = GameEngine::SParticleDefinition(GameEngine::eTexture::Particles, 1, sf::Vector2f(32.f, 32.f), GameEngine::EAnimationId::Smoke, 1.f);
+	emitterComponent->SetParticleDefinition(particleDef);
 
 	peppers.push_back(chiliPepper);
 }
@@ -148,6 +153,7 @@ void GameBoard::CreatePepper() {
 
 	chiliArrowSpriteRender->SetFillColor(sf::Color::Transparent);
 	chiliArrowSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
+
 
 	obstacles.push_back(chiliArrow);
 }

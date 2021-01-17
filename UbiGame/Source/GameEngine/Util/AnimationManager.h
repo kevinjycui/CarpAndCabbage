@@ -11,7 +11,8 @@ namespace GameEngine
 	{
 		enum type
 		{			
-			None,
+			None = -1,
+			Smoke,
 		};
 	}
 
