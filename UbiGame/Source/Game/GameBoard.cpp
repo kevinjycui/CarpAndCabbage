@@ -375,6 +375,22 @@ void GameBoard::AddBackground()
 
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::Background);
+
+	GameEngine::Entity* game_instr = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(game_instr);
+
+	if (Socket::isFish)
+		game_instr->SetPos(sf::Vector2f(260.0f, 180.0f));
+	else
+		game_instr->SetPos(sf::Vector2f(1180.0f, 180.0f));
+		
+	game_instr->SetSize(sf::Vector2f(480.f, 360.f));
+
+	GameEngine::SpriteRenderComponent* instrSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(game_instr->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	instrSpriteRender->SetFillColor(sf::Color::Transparent);
+	instrSpriteRender->SetTexture(GameEngine::eTexture::GameInstr);
 }
 
 void GameBoard::AddObstacles()
