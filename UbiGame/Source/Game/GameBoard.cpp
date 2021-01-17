@@ -130,7 +130,7 @@ GameBoard::GameBoard() {
 	CreatePlatform();
 	CreateCuts();
 	CreatePepper();
-	DrawText();
+	//DrawText();
 }
 
 void GameBoard::CreatePepper() {
@@ -622,7 +622,7 @@ void GameBoard::DrawText() {
 	GameEngine::TextRenderComponent* textRender = static_cast<GameEngine::TextRenderComponent *>(text->AddComponent<GameEngine::TextRenderComponent>());
 	textRender->SetFillColor(sf::Color::Transparent);
 	textRender->SetString("test");
-	textRender->SetFont("arial.ttf");
+	//textRender->SetFont("arial.ttf");
 }
 
 
