@@ -426,7 +426,7 @@ void GameBoard::Update()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
 		if (!pressed) {
 			pressed = true;
-			if (currPlatform < fishPlatforms.size() - 1) {
+			if (currPlatform < opponentPlatforms->size() - 1) {
 				currPlatform++;
 				cut->SetPos(opponentPlatforms->at(currPlatform)->GetPos());//cut.setpos
 
