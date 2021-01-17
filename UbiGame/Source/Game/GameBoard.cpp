@@ -92,6 +92,28 @@ void GameBoard::CreatePepper() {
 
 Menu::Menu() {
 	AddMenuBackground();
+
+	// Room was full
+	Socket::io.socket()->on("fullRoom", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		Socket::isFullRoom = true;
+		Socket::isWaitingOnOtherPlayer = false;
+	}));
+
+	// You started a room
+	Socket::io.socket()->on("firstInRoom", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		Socket::firstInRoom = true;
+	}));
+
+	// A player joined your room
+	Socket::io.socket()->on("newPlayer", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		std::string opponentId = data->get_string();
+		Socket::opponentId = opponentId;
+
+		// Start the game
+		Menu::~Menu();
+		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+	}));
+
 	AddButton();
 	AddTextbox();
 }
@@ -148,55 +170,70 @@ void Menu::Update() {
 		GameEngine::GameEngineMain::GetInstance()->StartGame(true);
 	}
 
-	if (Socket::firstInRoom) {
-
-	}
-
 	//on click, call the function from gameenginemain
 	//if button clicked
+
+	// Start as fish
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
-		// You joined a room that was full
-		Socket::io.socket()->on("fullRoom", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
-			Socket::isFullRoom = true;
-		}));
+		if (!Socket::isWaitingOnOtherPlayer) {
+			Socket::isWaitingOnOtherPlayer = true;
+			Socket::isFish = true;
+			// Getting socket.io connection
+			Socket::io.socket()->emit("joinRoom", std::string("roomId"), [&](sio::message::list const& msg) {
+				std::string result_str = msg.at(0)->get_string();
+				// Non-empty string is opponentId
+				if (!result_str.empty()) {
+					Socket::opponentId = result_str;
 
-		// You started a room
-		Socket::io.socket()->on("firstInRoom", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
-			Socket::firstInRoom = true;
-		}));
-
-		// A player joined your room
-		Socket::io.socket()->on("newPlayer", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
-			std::string opponentId = data->get_string();
-			Socket::opponentId = opponentId;
-
-			// Start the game
-			Menu::~Menu();
-			GameEngine::GameEngineMain::GetInstance()->StartGame(true);
-		}));
-
-		// Getting socket.io connection
-		Socket::io.socket()->emit("joinRoom", std::string("roomId"), [&](sio::message::list const& msg) {
-			std::string result_str = msg.at(0)->get_string();
-			// Non-empty string is opponentId
-			if (!result_str.empty()) {
-				Socket::opponentId = result_str;
-
-				// Start the game
-				Menu::~Menu();
-				GameEngine::GameEngineMain::GetInstance()->StartGame(true);
-			}
-			// Otherwise, room was either full or empty
-		});
+					// Start the game
+					Menu::~Menu();
+					GameEngine::GameEngineMain::GetInstance()->StartGame(true);
+				}
+			});
+		}
 	}
-	// Start as opponent
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		Menu::~Menu();
-		GameEngine::GameEngineMain::GetInstance()->StartGame(false);
+
+	// Start as cabbage
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		if (!Socket::isWaitingOnOtherPlayer) {
+			Socket::isWaitingOnOtherPlayer = true;
+			Socket::isFish = false;
+			// Getting socket.io connection
+			Socket::io.socket()->emit("joinRoom", std::string("roomId"), [&](sio::message::list const& msg) {
+				std::string result_str = msg.at(0)->get_string();
+				// Non-empty string is opponentId
+				if (!result_str.empty()) {
+					Socket::opponentId = result_str;
+
+					// Start the game
+					Menu::~Menu();
+					GameEngine::GameEngineMain::GetInstance()->StartGame(false);
+				}
+			});
+		}
 	}
 }
 
 Menu::~Menu() {
+
+}
+
+GameOver::GameOver() {
+	
+}
+
+
+void GameOver::Update() {
+	//on click, call the function from gameenginemain
+	//if button clicked
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+		GameOver::~GameOver();
+		GameEngine::GameEngineMain::GetInstance()->GameOver();
+		std::cout << "game over";
+	}
+}
+
+GameOver::~GameOver() {
 
 }
 
@@ -416,6 +453,7 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
+
 }
 
 void GameBoard::CreateCuts() {
