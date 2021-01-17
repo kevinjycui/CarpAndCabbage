@@ -29,6 +29,24 @@ using namespace Game;
 static GameEngine::SoundComponent* soundCompon;
 static int soundId;
 
+void GameBoard::SpawnPepper(sf::Vector2f position) {
+
+	// Creating the chili pepper
+	GameEngine::Entity* chiliPepper = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliPepper);
+
+	chiliPepper->SetPos(position);
+	chiliPepper->SetSize(sf::Vector2f(50.0f, 50.0f));
+	chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
+
+	GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
+	chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
+
+	obstacles.push_back(chiliPepper);
+}
+
 GameBoard::GameBoard() {
 	AddBackground();
 	CreatePlayer();
@@ -38,28 +56,8 @@ GameBoard::GameBoard() {
 	Socket::io.socket()->on("chiliAttack", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
 		auto payload = nlohmann::json::parse(data->get_string());
 		float x = payload["x"];
-		std::string activatedById = payload["activatedById"];
-
-		// Creating the chili pepper
-		GameEngine::Entity* chiliPepper = new GameEngine::Entity();
-		GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliPepper);
-
-		if (activatedById == Socket::playerId) {
-			chiliPepper->SetPos(sf::Vector2f(960.0f + x, 25.0f));
-		}
-		else {
-			chiliPepper->SetPos(sf::Vector2f(0.0f + x, 25.0f));
-		}
-
-		chiliPepper->SetSize(sf::Vector2f(50.0f, 50.0f));
-		chiliPepper->AddComponent<Game::ChiliPepperMovementComponent>();
-
-		GameEngine::SpriteRenderComponent* chiliPepperSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliPepper->AddComponent<GameEngine::SpriteRenderComponent>());
-
-		chiliPepperSpriteRender->SetFillColor(sf::Color::Transparent);
-		chiliPepperSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
-
-		obstacles.push_back(chiliPepper);
+		float y = payload["y"];
+		SpawnPepper(sf::Vector2f { x, y });
 	}));
 
 	CreatePlatform();
@@ -73,13 +71,13 @@ void GameBoard::CreatePepper() {
 	GameEngine::GameEngineMain::GetInstance()->AddEntity(chiliArrow);
 
 	if (Socket::isFish) {
-		chiliArrow->SetPos(sf::Vector2f(960.0f, 0.0f));
+		chiliArrow->SetPos(sf::Vector2f(1440.f, 50.f));
 	}
 	else {
-		chiliArrow->SetPos(sf::Vector2f(0.0f, 0.0f));
+		chiliArrow->SetPos(sf::Vector2f(480.f, 50.f));
 	}
 
-	chiliArrow->SetSize(sf::Vector2f(20.0f, 20.0f));
+	chiliArrow->SetSize(sf::Vector2f(50.0f, 50.0f));
 	chiliArrow->AddComponent<Game::ChiliArrowMovementComponent>();
 
 	GameEngine::SpriteRenderComponent* chiliArrowSpriteRender = static_cast<GameEngine::SpriteRenderComponent*>(chiliArrow->AddComponent<GameEngine::SpriteRenderComponent>());
@@ -218,24 +216,17 @@ Menu::~Menu() {
 
 }
 
-GameOver::GameOver() {
-	
-}
-
 
 void GameOver::Update() {
 	//on click, call the function from gameenginemain
 	//if button clicked
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
 		GameOver::~GameOver();
-		GameEngine::GameEngineMain::GetInstance()->GameOver();
+		GameEngine::GameEngineMain::GetInstance()->EndGame();
 		std::cout << "game over";
 	}
 }
 
-GameOver::~GameOver() {
-
-}
 
 void GameBoard::AddBackground()
 {
@@ -439,6 +430,47 @@ bool comparator(const GameEngine::Entity* lhs, const GameEngine::Entity* rhs) {
 	return lhs->GetPos().y < rhs->GetPos().y;
 }
 
+void GameBoard::BreakPlayerPlatform(sf::Vector2f pos) {
+	std::vector<GameEngine::Entity*>* opponentPlatforms;
+	if (Socket::isFish)
+		opponentPlatforms = &cabbagePlatforms;
+	else
+		opponentPlatforms = &fishPlatforms;
+
+	cutMade = true;
+
+	GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
+
+	newPos = platform->GetPos();
+
+	if (Socket::isFish)
+		brokenFish->SetPos(newPos);
+	else
+		brokenCabbage->SetPos(newPos);
+
+	cabbagePlatforms.erase(cabbagePlatforms.begin() + currPlatform);
+	currPlatform = 1;
+
+	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
+	GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
+
+	cabbagePlatformCoords;
+}
+
+void GameBoard::BreakOpponentPlatform(sf::Vector2f pos) {
+	std::vector<GameEngine::Entity*>* opponentPlatforms;
+	if (Socket::isFish)
+		opponentPlatforms = &cabbagePlatforms;
+	else
+		opponentPlatforms = &fishPlatforms;
+
+	for (int i = 0; i < opponentPlatforms->size(); ++i) {
+		if (opponentPlatforms->at(i)->GetPos() == pos) {
+
+		}
+	}
+}
+
 void GameBoard::Update()
 {
 	std::vector<GameEngine::Entity*>* opponentPlatforms;
@@ -516,6 +548,14 @@ void GameBoard::Update()
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(platform);
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}
+	else {
+		down_pressed = false;
+		up_pressed = false;
+	}
+
+	if (Socket::isGameOver) {
+		GameEngine::GameEngineMain::GetInstance()->EndGame();
+	}
 }
 
 void GameBoard::CreateCuts() {
@@ -526,4 +566,26 @@ void GameBoard::CreateCuts() {
 	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>(cut->AddComponent<GameEngine::SpriteRenderComponent>());
 	spriteRender->SetFillColor(sf::Color::Transparent);
 	spriteRender->SetTexture(GameEngine::eTexture::DottedLine);
+}
+
+GameOver::GameOver() {
+	AddGOBackground();
+}
+
+GameOver::~GameOver() {
+
+}
+
+void GameOver::AddGOBackground(){
+	bg = new GameEngine::Entity();
+	GameEngine::GameEngineMain::GetInstance()->AddEntity(bg);
+
+	bg->SetPos(sf::Vector2f(1920.0f / 2, 1080.0f / 2));
+	bg->SetSize(sf::Vector2f(1920.0f, 1080.0f));
+
+	GameEngine::SpriteRenderComponent* spriteRender = static_cast<GameEngine::SpriteRenderComponent*>
+		(bg->AddComponent<GameEngine::SpriteRenderComponent>());
+
+	spriteRender->SetFillColor(sf::Color::Transparent);
+	spriteRender->SetTexture(GameEngine::eTexture::GameEnd);
 }

@@ -21,7 +21,8 @@ using sio::message;
 static float velocity_y = 0.f;
 static float acceleration_y = 0.098f;
 
-float time_passed = 0;
+float time_passed = 5;
+bool pressed = false;
 
 void ChiliArrowMovementComponent::Update()
 {
@@ -62,11 +63,19 @@ void ChiliArrowMovementComponent::Update()
     sf::Vector2f newPos = GetEntity()->GetPos() + displacement;
     GetEntity()->SetPos(newPos);
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && time_passed >= 5.f) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q) && time_passed >= 5.f && !pressed) {
+        pressed = true;
+    } else if (pressed) {
+        pressed = false;
+        time_passed = 0.f;
+
         nlohmann::json j;
+        std::string activatedById = Socket::playerId;
         j["x"] = GetEntity()->GetPos().x;
-        j["activatedById"] = Socket::playerId;
+        j["y"] = GetEntity()->GetPos().y;
+
         Socket::io.socket()->emit("chiliAttack", j.dump());
+        GameEngineMain::GetInstance()->m_gameBoard->SpawnPepper(GetEntity()->GetPos());
     }
 }
 

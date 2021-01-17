@@ -33,8 +33,9 @@ namespace Game
 		GameOver();
 		virtual ~GameOver();
 		void Update();
-
 	private:
+		void AddGOBackground();
+		GameEngine::Entity* bg;
 		//void AddMenuBackground();
 		//GameEngine::Entity* bg;
 		//void AddButton();
@@ -62,6 +63,9 @@ namespace Game
 		void AddObstacles();
 		void CreatePlatform();
 		void CreatePepper();
+		void BreakOpponentPlatform(sf::Vector2f pos);
+		void BreakPlayerPlatform(sf::Vector2f pos);
+		void SpawnPepper(sf::Vector2f pos);
 		std::vector<GameEngine::Entity*> obstacles;
 		std::vector<GameEngine::Entity*> fishPlatforms;
 		std::vector<GameEngine::Entity*> cabbagePlatforms;
