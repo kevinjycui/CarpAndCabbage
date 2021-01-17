@@ -24,6 +24,8 @@ namespace GameEngine
 
 			Background,
 
+			BrokenBread,
+
 			Bread,
 
 			Title,
@@ -44,6 +46,7 @@ namespace GameEngine
 		case eTexture::Lettuce: return "lettuce.png";
 		case eTexture::Knife: return "knife.png";
 		case eTexture::Background: return "bg.png";
+		case eTexture::BrokenBread: return "broken.png";
 		case eTexture::Bread: return "bread.png";
 		case eTexture::FishRight: return "fish_right.png";
 		case eTexture::LettuceRight: return "lettuce_right.png";
