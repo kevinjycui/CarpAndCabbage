@@ -29,13 +29,21 @@ using sio::message;
 using namespace Game;
 
 static GameEngine::SoundComponent* soundCompon;
+static GameEngine::SoundComponent* playerSoundCompon;
+static GameEngine::SoundComponent* chiliSoundCompon;
+
 static int soundId;
+static int blankSoundId;
+static int sliceSoundId;
+static int fireSoundId;
 
 int currPlatform = 1;
 GameEngine::Entity* brokenFish = new GameEngine::Entity();
 GameEngine::Entity* brokenCabbage = new GameEngine::Entity();
 
 bool escDown = false;
+bool muted = false;
+bool mute_pressed = false;
 
 void GameBoard::SpawnPepper(sf::Vector2f position) {
 
@@ -66,6 +74,9 @@ GameBoard::GameBoard() {
 	AddObstacles();
 
 	Socket::io.socket()->on("chiliAttack", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		
+		chiliSoundCompon->PlaySound(fireSoundId, true);
+
 		auto payload = nlohmann::json::parse(data->get_string());
 		float x = payload["x"];
 		float y = payload["y"];
@@ -73,6 +84,9 @@ GameBoard::GameBoard() {
 	}));
 
 	Socket::io.socket()->on("breakPlatform", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		
+		playerSoundCompon->PlaySound(sliceSoundId, true);
+
 		auto payload = nlohmann::json::parse(data->get_string());
 		float x = payload["x"];
 		float y = payload["y"];
@@ -158,6 +172,8 @@ void GameBoard::CreatePepper() {
 	chiliArrowSpriteRender->SetFillColor(sf::Color::Transparent);
 	chiliArrowSpriteRender->SetTexture(GameEngine::eTexture::ChiliPepper);
 
+	chiliSoundCompon = static_cast<GameEngine::SoundComponent*>
+		(chiliArrow->AddComponent<GameEngine::SoundComponent>());
 
 	obstacles.push_back(chiliArrow);
 }
@@ -225,6 +241,10 @@ void Menu::AddButton() {
 		(btn->AddComponent<GameEngine::SoundComponent>());
 
 	soundId = soundCompon->LoadSoundFromFile("Resources/audio/music.wav");
+	blankSoundId = soundCompon->LoadSoundFromFile("Resources/audio/blank.wav");
+	sliceSoundId = soundCompon->LoadSoundFromFile("Resources/audio/slice.wav");
+	fireSoundId = soundCompon->LoadSoundFromFile("Resources/audio/fire.wav");
+
 	soundCompon->PlaySound(soundId, true);
 
 	GameEngine::Entity* instr = new GameEngine::Entity();
@@ -299,12 +319,47 @@ void Menu::Update() {
 			});
 		}
 	}
+
+	//mute the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		mute_pressed = true;
+	}
+	else if (mute_pressed) {
+		mute_pressed = false;
+		if (muted) {
+			muted = false;
+			soundCompon->PlaySound(soundId, true);
+		}
+		else {
+			muted = true;
+			soundCompon->PlaySound(blankSoundId, true);
+		}
+	}
 }
 
 Menu::~Menu() {
 
 }
 
+
+void GameOver::Update() {
+
+	//mute the game
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		mute_pressed = true;
+	}
+	else if (mute_pressed) {
+		mute_pressed = false;
+		if (muted) {
+			muted = false;
+			soundCompon->PlaySound(soundId, true);
+		}
+		else {
+			muted = true;
+			soundCompon->PlaySound(blankSoundId, true);
+		}
+	}
+}
 
 
 void GameBoard::AddBackground()
@@ -482,6 +537,9 @@ void GameBoard::CreatePlayer() {
 		spriteRender->SetTexture(GameEngine::eTexture::Lettuce);
 	}
 
+	playerSoundCompon = static_cast<GameEngine::SoundComponent*>
+		(player->AddComponent<GameEngine::SoundComponent>());
+
 	player->AddComponent<Game::PlayerMovementComponent>();  // <-- Added the movement component to the player
 	player->AddComponent<GameEngine::CollidablePhysicsComponent>();
 	// player->AddComponent<PawnPhysicsComponent>();
@@ -571,6 +629,9 @@ void GameBoard::Update()
 
 	//move selector to previous platform
 	if (!cutMade && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
+		playerSoundCompon->PlaySound(sliceSoundId, true);
+
 		cutMade = true;
 
 		GameEngine::Entity* platform = opponentPlatforms->at(currPlatform);
@@ -603,11 +664,17 @@ void GameBoard::Update()
 
 	//mute the game
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		soundCompon->PlaySound(soundId, false);
-	}
-	//unmute the game
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
-		soundCompon->PlaySound(soundId, true);
+		mute_pressed = true;
+	} else if (mute_pressed) {
+		mute_pressed = false;
+		if (muted) {
+			muted = false;
+			soundCompon->PlaySound(soundId, true);
+		}
+		else {
+			muted = true;
+			soundCompon->PlaySound(blankSoundId, true);
+		}
 	}
 }
 

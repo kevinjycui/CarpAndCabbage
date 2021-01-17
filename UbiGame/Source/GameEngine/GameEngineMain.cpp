@@ -26,7 +26,6 @@ GameEngineMain::GameEngineMain()
 	, m_gameBoard(nullptr)
 	, m_windowInitialised(false)
 {
-
 	CreateAndSetUpWindow();
 	//Load predefined textures
 	TextureManager::GetInstance()->LoadTextures();
