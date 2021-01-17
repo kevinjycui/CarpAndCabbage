@@ -102,6 +102,26 @@ GameBoard::GameBoard() {
 		GameEngine::GameEngineMain::GetInstance()->RemoveEntity(cut);
 	}));
 
+	Socket::io.socket()->on("playerDied", socket::event_listener_aux([&](std::string const& name, message::ptr const& data, bool is_ack, message::list& ack_resp) {
+		std::string playerId = data->get_string();
+		if (playerId == Socket::playerId) {
+			if (Socket::isFish) {
+				Socket::isFishDead = true;
+			}
+			else {
+				Socket::isCabbageDead = true;
+			}
+		}
+		else if (playerId == Socket::opponentId) {
+			if (Socket::isFish) {
+				Socket::isCabbageDead = true;
+			}
+			else {
+				Socket::isFishDead = true;
+			}
+		}
+	}));
+
 	CreatePlatform();
 	CreateCuts();
 	CreatePepper();

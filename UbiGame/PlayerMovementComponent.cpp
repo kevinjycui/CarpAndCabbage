@@ -43,6 +43,10 @@ void PlayerMovementComponent::Update()
         }
     }
 
+    if (Socket::isFishDead || Socket::isCabbageDead) {
+        return;
+    }
+    
     velocity_y += acceleration_y;
 
     GameEngine::SpriteRenderComponent* playerSprite = GetEntity()->GetComponent<GameEngine::SpriteRenderComponent>();
